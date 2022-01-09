@@ -1,11 +1,7 @@
-import 'package:octopoints/db/entity/MatchEntity.dart';
-import 'package:octopoints/db/entity/TeamEntity.dart';
-import 'package:octopoints/db/entity/UserEntity.dart';
-import 'package:octopoints/model/MatchModel.dart';
-import 'package:octopoints/model/TeamModel.dart';
-import 'package:octopoints/model/UserModel.dart';
+import 'package:octopoints/db/db.dart';
+import 'package:octopoints/model/model.dart';
 
-class EntityConverter {
+class EntityDto {
   static UserModel toUserModel(UserEntity u) =>
       UserModel(u.id!, u.username, u.win, u.draw, u.lose);
 
@@ -26,4 +22,7 @@ class EntityConverter {
 
   static TeamEntity toTeamEntity(TeamModel t) =>
       TeamEntity(t.matchId, id: t.id, partial: t.partial, total: t.total);
+
+  static JoinTeamEntity toJoinTeamEntity(int teamId, int userId) =>
+      JoinTeamEntity(teamId, userId);
 }

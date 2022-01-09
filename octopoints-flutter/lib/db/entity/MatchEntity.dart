@@ -3,13 +3,11 @@ import 'package:floor/floor.dart';
 @Entity(tableName: 'matches')
 class MatchEntity {
   @PrimaryKey(autoGenerate: true)
-  @ColumnInfo(name: 'id')
   final int? id;
-  @ColumnInfo(name: 'description')
   final String description;
 
-  final int
-      gameMode; //vince il primo che arriva a n punti, perde il primo che arriva a n punti, rimangono n giocatori
+  //vince il primo che arriva a n punti, perde il primo che arriva a n punti, rimangono n giocatori
+  final int gameMode;
   final int points;
   final int survivors;
 

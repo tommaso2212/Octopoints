@@ -1,0 +1,39 @@
+\documentclass[12pt, letterpaper]{article}
+\usepackage[utf8]{inputenc}
+
+\title{Octopoints}
+\author{Tommaso Pavani}
+\date{Gennaio 2022}
+
+\begin{document}
+    \maketitle
+    \section{Introduzione}
+    \subsection{Obiettivo}
+    L'applicazione mobile dovrà tenere il conteggio dei punti di una partita.
+    Dovrà essere il più possibile generica in modo da poter essere usata per qualsiasi gioco da tavolo, in squadre o 1vs1.
+    \subsection{Features}
+    L'app avrà le seguenti funzionalità principali:
+    \begin{itemize}
+        \item Tenere il conteggio dei punti per ogni giocatore nella partita
+        \item Possibilità di avere più partite in corso
+    \end{itemize}
+    E qualche funzionalità extra:
+    \begin{itemize}
+        \item Possibilità di gestire partite in squadre
+        \item Alcune statistiche sui giocatori
+    \end{itemize}
+    \subsection{Approccio}
+    \emph{Per semplicità di sviluppo, l'app avrà un database locale.}
+    \newline
+    Ogni partita ovviamente dovrà avere, oltre ad un codice identificativo e un nome, delle regole:
+    \begin{itemize}
+        \item Punteggio da raggiungere (la partita termina quando uno o più giocatori raggiungono il punteggio fissato)
+        \item Numero dei vincitori (in alcuni giochi ci possono essere n vincitori)
+        \item Modalità di gioco (per generalizzare il più possibile, definiamo due macro modalita: un giocatore che arriva al punteggio fissato può vincere o perdere)
+    \end{itemize}
+    Per quanto riguarda la gestione di partite in squadre, ci limitiamo a gestire ogni partita come se fosse in squadre. Nel caso non sia un gioco di squadra, questa sarà composta da un solo giocatore.
+    Questo approccio ci permette di gestire anche partite particolari (es. 1vs2).
+    I punteggi della partita saranno quindi salvati per la squadra, in quanto uguali per tutti i suoi componenti.
+    
+    Le statistiche sui giocatori verranno aggiornate al termine di ogni partita, alla quale partecipano, mantenendone l'esito (vinta persa o pareggiata).
+\end{document}

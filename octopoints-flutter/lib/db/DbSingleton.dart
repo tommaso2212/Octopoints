@@ -6,12 +6,11 @@ class DbSingleton {
 
   factory DbSingleton() => _instance;
 
-  late OctopointsDb _db;
+  static OctopointsDb? _db;
 
-  OctopointsDb get db => _db;
+  OctopointsDb get db => _db!;
 
-  Future initDb() =>
-      $FloorOctopointsDb.databaseBuilder('octopoints-db').build().then(
-            (db) => _db = db,
-          );
+  Future<void> initDb() async {
+    _db = await $FloorOctopointsDb.databaseBuilder('octopoints.db').build();
+  }
 }

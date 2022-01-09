@@ -1,4 +1,3 @@
-import 'package:floor/floor.dart';
 import 'package:octopoints/model/UserModel.dart';
 
 class TeamModel {
@@ -17,8 +16,19 @@ class TeamModel {
   int get total => this._total;
   List<UserModel> get users => this._users;
 
-  set partial(int value) => this._partial = value;
+  TeamModel setPartial(int value) {
+    this._partial = value;
+    return this;
+  }
+
+  TeamModel setTotal(int value) {
+    this._total = value;
+    return this;
+  }
+
   set total(int value) => this._total = value;
+  set partial(int value) => this._partial = value;
+
   set users(List<UserModel> list) => this._users = list;
 
   TeamModel setId(int id) {

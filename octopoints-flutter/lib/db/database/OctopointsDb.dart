@@ -13,7 +13,9 @@ import 'dart:async';
 part 'OctopointsDb.g.dart';
 
 @Database(
-    version: 1, entities: [MatchEntity, UserEntity, TeamEntity, JoinTeamEntity])
+  version: 1,
+  entities: [MatchEntity, UserEntity, TeamEntity, JoinTeamEntity],
+)
 abstract class OctopointsDb extends FloorDatabase {
   MatchDao get matchDao;
   UserDao get userDao;

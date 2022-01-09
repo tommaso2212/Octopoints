@@ -11,9 +11,7 @@ import 'package:octopoints/db/entity/MatchEntity.dart';
 ])
 class TeamEntity {
   @PrimaryKey(autoGenerate: true)
-  @ColumnInfo(name: 'id')
   final int? id;
-  @ColumnInfo(name: 'matchId')
   final int matchId;
   int partial;
   int total;

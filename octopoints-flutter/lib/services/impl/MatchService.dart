@@ -1,16 +1,16 @@
-import 'package:octopoints/db/DbSingleton.dart';
-import 'package:octopoints/db/utils/EntityConverter.dart';
-import 'package:octopoints/model/MatchModel.dart';
-import 'package:octopoints/services/IService.dart';
+import 'package:octopoints/db/db.dart';
+import 'package:octopoints/model/model.dart';
+import 'package:octopoints/services/dto/EntityDto.dart';
+import 'package:octopoints/services/interfaces/CRDService.dart';
 
-class MatchService implements IService<MatchModel> {
+class MatchService implements CRDService<MatchModel> {
   @override
   Future<MatchModel> create(MatchModel match) async {
     try {
       int id = await DbSingleton()
           .db
           .matchDao
-          .create(EntityConverter.toMatchEntity(match));
+          .create(EntityDto.toMatchEntity(match));
       return match.setId(id);
     } on Exception catch (e) {
       throw e;
@@ -35,7 +35,7 @@ class MatchService implements IService<MatchModel> {
           .getAllMatches()
           .then<List<MatchModel>>(
             (entities) =>
-                entities.map((e) => EntityConverter.toMatchModel(e)).toList(),
+                entities.map((e) => EntityDto.toMatchModel(e)).toList(),
           );
     } on Exception catch (e) {
       throw e;
