@@ -13,7 +13,10 @@ abstract class BasePage<T> extends StatelessWidget {
                   .toList(),
             ),
       );
-  IProvider<T> get provider => IProvider<T>();
+  IProvider<T> get provider {
+    return IProvider<T>();
+  }
+
   AppBar appBar(BuildContext context);
   Widget buildCard(BuildContext context, T item);
   Widget body(BuildContext context, List<Widget>? children) => Column(
@@ -35,8 +38,8 @@ abstract class BasePage<T> extends StatelessWidget {
       );
 
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider.value(
-        value: provider,
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+        create: (context) => provider,
         builder: (context, _) => Scaffold(
           appBar: appBar(context),
           body: SingleChildScrollView(

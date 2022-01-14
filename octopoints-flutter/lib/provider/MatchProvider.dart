@@ -1,10 +1,32 @@
 import 'package:octopoints/model/model.dart';
+import 'package:octopoints/model/utils/MatchManager.dart';
 import 'package:octopoints/provider/IProvider.dart';
 import 'package:octopoints/services/ServiceFactory.dart';
 
 extension MatchProvider on IProvider<TeamModel> {
-  Future<void> update(TeamModel team) =>
-      ServiceFactory.teamService.update([team]);
+  static late MatchModel _matchModel;
+  static late MatchManager _matchManager;
+
+  void initMatchManager(MatchModel matchModel) {
+    _matchModel = matchModel;
+    _matchManager = MatchManager(matchModel);
+  }
+
+  List<String> get winners =>
+      _matchManager.winners.map((e) => e.username).toList();
+
+  Future<void> updateUsersStats() async {
+    await ServiceFactory.userService
+        .update(_matchManager.winners.map((e) => e.incrementWin()).toList());
+    await ServiceFactory.userService
+        .update(_matchManager.losers.map((e) => e.incrementLose()).toList());
+    ServiceFactory.matchService.delete(_matchModel);
+  }
+
+  Future<bool> update(TeamModel team) =>
+      ServiceFactory.teamService.update([team]).then<bool>((_) async {
+        return _matchManager.isGameOver((await this.getAll()));
+      });
 
   void leaveTeam(int teamId, int userId) =>
       ServiceFactory.teamService.leaveTeam(teamId, userId).then((_) async {

@@ -27,11 +27,13 @@ class MatchCard extends StatelessWidget {
           ),
         ),
         onDelete: () => context.read<IProvider<MatchModel>>().remove(_match),
-        onTap: () => Navigator.push(
+        onTap: () => Navigator.push<bool>(
           context,
-          MaterialPageRoute(
+          MaterialPageRoute<bool>(
             builder: (context) => MatchPage(_match),
           ),
-        ),
+        ).then((value) => value != null && value
+            ? context.read<IProvider<MatchModel>>().remove(_match)
+            : null),
       );
 }

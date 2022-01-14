@@ -30,7 +30,6 @@ class CreateTeamModal extends StatelessWidget {
                     bottom: MediaQuery.of(context).viewInsets.bottom,
                   ),
                   child: ConfirmButton(() {
-                    print(matchId);
                     context
                         .read<IProvider<TeamModel>>()
                         .add(TeamModel.insert(matchId));

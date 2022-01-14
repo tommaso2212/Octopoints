@@ -51,23 +51,6 @@ class UserCard extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(
-                        Icons.horizontal_rule,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        _user.draw.toString(),
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 15),
-                  child: Row(
-                    children: [
-                      Icon(
                         Icons.keyboard_arrow_down,
                         color: Colors.white,
                       ),

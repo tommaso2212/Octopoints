@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:octopoints/db/db.dart';
-import 'package:octopoints/view/pages/HomePage.dart';
 import 'package:octopoints/view/widget/widget.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -12,14 +11,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    DbSingleton().initDb().then(
-          (_) => Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomePage(),
-            ),
-          ),
-        );
+    DbSingleton()
+        .initDb()
+        .then((_) => Navigator.pushReplacementNamed(context, 'home'));
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:octopoints/model/model.dart';
 import 'package:octopoints/provider/provider.dart';
+import 'package:octopoints/view/widget/modal/EndMatchModal.dart';
 import 'package:octopoints/view/widget/widget.dart';
 
 class TeamCard extends StatefulWidget {
@@ -68,6 +69,27 @@ class _TeamCardState extends State<TeamCard> {
                             ? context
                                 .read<IProvider<TeamModel>>()
                                 .update(widget._team.setTotal(int.parse(value)))
+                                .then(
+                                  (isGameOver) => isGameOver
+                                      ? showModalBottomSheet<bool>(
+                                          context: context,
+                                          builder: (buildContext) => Container(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 40, horizontal: 20),
+                                            child: EndMatchModal(context),
+                                          ),
+                                          isScrollControlled: true,
+                                          backgroundColor:
+                                              OctopointsTheme.darkGrey,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                          ),
+                                        ).then((value) => value != null && value
+                                          ? Navigator.pop(context, true)
+                                          : null)
+                                      : null,
+                                )
                             : _totalController.text =
                                 widget._team.total.toString(),
                         keyboardType: TextInputType.number,

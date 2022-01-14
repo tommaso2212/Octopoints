@@ -11,6 +11,13 @@ class MatchPage extends BasePage<TeamModel> {
   MatchPage(this._match);
 
   @override
+  IProvider<TeamModel> get provider {
+    IProvider<TeamModel> provider = IProvider<TeamModel>();
+    provider.initMatchManager(_match);
+    return provider;
+  }
+
+  @override
   Future<List<Widget>> getAll(BuildContext context) =>
       context.select<IProvider<TeamModel>, Future<List<Widget>>>(
         (provider) => provider.getAll(byId: _match.id!).then(

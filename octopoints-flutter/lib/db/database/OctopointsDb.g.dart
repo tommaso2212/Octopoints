@@ -90,7 +90,7 @@ class _$OctopointsDb extends OctopointsDb {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `matches` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT NOT NULL, `gameMode` INTEGER NOT NULL, `points` INTEGER NOT NULL, `survivors` INTEGER NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `users` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `username` TEXT NOT NULL, `win` INTEGER NOT NULL, `lose` INTEGER NOT NULL, `draw` INTEGER NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `users` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `username` TEXT NOT NULL, `win` INTEGER NOT NULL, `lose` INTEGER NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `teams` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `matchId` INTEGER NOT NULL, `partial` INTEGER NOT NULL, `total` INTEGER NOT NULL, FOREIGN KEY (`matchId`) REFERENCES `matches` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
@@ -209,8 +209,7 @@ class _$UserDao extends UserDao {
                   'id': item.id,
                   'username': item.username,
                   'win': item.win,
-                  'lose': item.lose,
-                  'draw': item.draw
+                  'lose': item.lose
                 }),
         _userEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -220,8 +219,7 @@ class _$UserDao extends UserDao {
                   'id': item.id,
                   'username': item.username,
                   'win': item.win,
-                  'lose': item.lose,
-                  'draw': item.draw
+                  'lose': item.lose
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -241,8 +239,7 @@ class _$UserDao extends UserDao {
             row['username'] as String,
             id: row['id'] as int?,
             win: row['win'] as int,
-            lose: row['lose'] as int,
-            draw: row['draw'] as int));
+            lose: row['lose'] as int));
   }
 
   @override
@@ -252,8 +249,7 @@ class _$UserDao extends UserDao {
             row['username'] as String,
             id: row['id'] as int?,
             win: row['win'] as int,
-            lose: row['lose'] as int,
-            draw: row['draw'] as int),
+            lose: row['lose'] as int),
         arguments: [id]);
   }
 
@@ -386,7 +382,7 @@ class _$JoinTeamDao extends JoinTeamDao {
   Future<List<UserEntity>> getTeammates(int teamId) async {
     return _queryAdapter.queryList(
         'SELECT U.* FROM users U, jointeam J WHERE J.teamId=?1 AND J.userId=U.id',
-        mapper: (Map<String, Object?> row) => UserEntity(row['username'] as String, id: row['id'] as int?, win: row['win'] as int, lose: row['lose'] as int, draw: row['draw'] as int),
+        mapper: (Map<String, Object?> row) => UserEntity(row['username'] as String, id: row['id'] as int?, win: row['win'] as int, lose: row['lose'] as int),
         arguments: [teamId]);
   }
 

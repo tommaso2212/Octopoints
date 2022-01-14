@@ -3,10 +3,10 @@ import 'package:octopoints/model/model.dart';
 
 class EntityDto {
   static UserModel toUserModel(UserEntity u) =>
-      UserModel(u.id!, u.username, u.win, u.draw, u.lose);
+      UserModel(u.id!, u.username, u.win, u.lose);
 
   static UserEntity toUserEntity(UserModel u) =>
-      UserEntity(u.username, id: u.id, win: u.win, lose: u.lose, draw: u.draw);
+      UserEntity(u.username, id: u.id, win: u.win, lose: u.lose);
 
   static MatchModel toMatchModel(MatchEntity m) => MatchModel(
       m.id, m.description, GameMode.values[m.gameMode], m.points, m.survivors);
