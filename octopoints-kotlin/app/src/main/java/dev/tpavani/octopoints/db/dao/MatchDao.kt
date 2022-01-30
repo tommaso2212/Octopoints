@@ -7,5 +7,5 @@ import dev.tpavani.octopoints.db.entity.MatchEntity
 @Dao
 interface MatchDao : IDao<MatchEntity> {
     @Query("SELECT * FROM matches WHERE active=:active ORDER BY id DESC")
-    suspend fun getMatches(active: Boolean): List<MatchEntity>
+    suspend fun getMatches(active: Boolean?): List<MatchEntity>
 }

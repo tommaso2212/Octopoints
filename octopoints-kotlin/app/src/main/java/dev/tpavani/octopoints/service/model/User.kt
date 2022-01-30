@@ -2,19 +2,14 @@ package dev.tpavani.octopoints.service.model
 
 class User(
     private val username: String,
-) {
-    private var id: Int = 0
+): OctopointsModel() {
     private var win: Int = 0
     private var lose: Int = 0
 
     constructor(id: Int, username: String, win: Int, lose: Int) : this(username){
-        this.id = id
+        setId(id)
         this.win = win
         this.lose = lose
-    }
-
-    fun getId(): Int {
-        return this.id
     }
 
     fun getUsername(): String {
@@ -27,11 +22,6 @@ class User(
 
     fun getLose(): Int {
         return this.lose
-    }
-
-    fun setId(id: Int): User{
-        this.id = id
-        return this
     }
 
     fun addWin() {
