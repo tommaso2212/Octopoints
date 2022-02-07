@@ -14,9 +14,9 @@ import androidx.room.PrimaryKey
 ])
 class TeamEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Int,
     val matchId: Int,
     val name: String,
-    var total: Int = 0,
-    var partial: Int = 0,
+    var total: Int,
+    var partial: Int,
 )

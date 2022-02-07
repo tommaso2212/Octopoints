@@ -5,7 +5,6 @@ import dev.tpavani.octopoints.db.dao.MatchDao
 import dev.tpavani.octopoints.db.dao.TeamDao
 import dev.tpavani.octopoints.db.entity.MatchEntity
 import dev.tpavani.octopoints.service.DBService
-import dev.tpavani.octopoints.service.model.GameMode
 import dev.tpavani.octopoints.service.model.Match
 import dev.tpavani.octopoints.service.utils.GetListFilter
 
@@ -19,7 +18,7 @@ class DBMatchService: DBService<Match, MatchEntity>() {
 
     override suspend fun getList(filter: GetListFilter): MutableList<Match> {
         if (filter.active != null){
-            return dao.getMatches(filter.active!!).map { Match(it.id, it.description, GameMode.values()[it.gameMode], it.points, it.survivors, it.active) }.toMutableList()
+            return dao.getMatches(filter.active!!).map { Match(it.id, it.description, Match.GameMode.values()[it.gameMode], it.points, it.survivors, it.active) }.toMutableList()
         }
         return mutableListOf()
     }

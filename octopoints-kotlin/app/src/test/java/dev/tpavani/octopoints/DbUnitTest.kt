@@ -7,7 +7,6 @@ import dev.tpavani.octopoints.service.DBService
 import dev.tpavani.octopoints.service.impl.DBMatchService
 import dev.tpavani.octopoints.service.impl.DBTeamService
 import dev.tpavani.octopoints.service.impl.DBUserService
-import dev.tpavani.octopoints.service.model.GameMode
 import dev.tpavani.octopoints.service.model.Match
 import dev.tpavani.octopoints.service.model.Team
 import dev.tpavani.octopoints.service.model.User
@@ -48,7 +47,7 @@ class DbUnitTest {
     @Test
     fun matchTest(){
         val matchService: DBMatchService = DBService.getMatchService()
-        var match = Match("description", GameMode.FirstToTotal, 3, 1)
+        var match = Match("description", Match.GameMode.FIRST_TO_TOTAL, 3, 1)
 
         runBlocking {
             matchService.create(match)

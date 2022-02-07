@@ -3,7 +3,7 @@ package dev.tpavani.octopoints.service.model
 class Match(private val description: String, private var gameMode: GameMode, private var points: Int, private var survivors: Int):
     OctopointsModel() {
     private var active: Boolean = true
-    var teams: MutableList<Team> = mutableListOf<Team>()
+    var teams: MutableList<Team> = mutableListOf()
 
     constructor(id: Int, description: String, gameMode: GameMode, points: Int, survivors: Int, active: Boolean) : this(description, gameMode, points, survivors) {
         setId(id)
@@ -37,9 +37,10 @@ class Match(private val description: String, private var gameMode: GameMode, pri
         this.active = false
         return this
     }
+
+    enum class GameMode {
+        FIRST_TO_TOTAL,
+        LAST_TO_TOTAL
+    }
 }
 
-enum class GameMode {
-    FirstToTotal,
-    LastToTotal,
-}
