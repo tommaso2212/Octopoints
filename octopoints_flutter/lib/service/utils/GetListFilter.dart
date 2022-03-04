@@ -2,7 +2,7 @@ class GetListFilter {
   int? id;
   bool? isActive;
 
-  GetListFilter setId(int id){
+  GetListFilter setId(int? id){
     this.id = id;
     return this;
   }

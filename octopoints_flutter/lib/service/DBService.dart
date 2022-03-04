@@ -10,8 +10,8 @@ abstract class DBService<T extends OctopointsModel, E> {
   E entityMapper(T model);
 
   Future<void> create(T model) async {
-    int id = await dao.create(entityMapper(model));
-    model.id = id;
+      int id = await dao.create(entityMapper(model));
+      model.id = id;
   }
 
   Future<List<T>> getList(GetListFilter filters);
