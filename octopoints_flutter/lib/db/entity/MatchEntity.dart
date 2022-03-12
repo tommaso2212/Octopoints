@@ -4,11 +4,12 @@ import 'package:floor/floor.dart';
 class MatchEntity {
   @PrimaryKey(autoGenerate: true)
   final int? id;
-  final String description;
-  final int gameMode;
-  final int points;
-  final int survivors;
+  final String name;
   final bool isActive;
 
-  MatchEntity(this.id, this.description, this.gameMode, this.points, this.survivors, this.isActive);
+  MatchEntity(
+    this.id,
+    this.name,
+    this.isActive,
+  );
 }

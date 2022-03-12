@@ -1,30 +1,20 @@
-import 'package:octopoints_flutter/db/dao/IDao.dart';
-import 'package:octopoints_flutter/service/impl/DBMatchService.dart';
-import 'package:octopoints_flutter/service/impl/DBTeamService.dart';
-import 'package:octopoints_flutter/service/impl/DBUserService.dart';
-import 'package:octopoints_flutter/service/model/OctopointsModel.dart';
-import 'package:octopoints_flutter/service/utils/GetListFilter.dart';
+import 'package:octopoints_flutter/service/MatchService.dart';
+import 'package:octopoints_flutter/service/RuleService.dart';
+import 'package:octopoints_flutter/service/TeamService.dart';
+import 'package:octopoints_flutter/service/UserService.dart';
+import 'package:octopoints_flutter/service/impl/MatchServiceImpl.dart';
+import 'package:octopoints_flutter/service/impl/RuleServiceImpl.dart';
+import 'package:octopoints_flutter/service/impl/TeamServiceImpl.dart';
+import 'package:octopoints_flutter/service/impl/UserServiceImpl.dart';
 
-abstract class DBService<T extends OctopointsModel, E> {
-  IDao<E> get dao;
-  E entityMapper(T model);
+abstract class DBService {
+  static final MatchService _matchService = MatchServiceImpl();
+  static final UserService _userService = UserServiceImpl();
+  static final RuleService _ruleService = RuleServiceImpl();
+  static final TeamService _teamService = TeamServiceImpl();
 
-  Future<void> create(T model) async {
-      int id = await dao.create(entityMapper(model));
-      model.id = id;
-  }
-
-  Future<List<T>> getList(GetListFilter filters);
-
-  Future<bool> update(List<T> list) async {
-    return (await dao.modify(list.map((e) => entityMapper(e)).toList())) == list.length;
-  }
-
-  Future<bool> delete(T model) async {
-    return (await dao.remove(entityMapper(model))) == 1;
-  }
-
-  static DBMatchService get matchService => DBMatchService();
-  static DBUserService get userService => DBUserService();
-  static DBTeamService get teamService => DBTeamService();
+  static MatchService get matchService => _matchService;
+  static UserService get userService => _userService;
+  static RuleService get ruleService => _ruleService;
+  static TeamService get teamService => _teamService;
 }

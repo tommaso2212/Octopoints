@@ -67,7 +67,9 @@ class _$OctopointsDb extends OctopointsDb {
 
   TeamDao? _teamDaoInstance;
 
-  JoinTeamDao? _joinTeamDaoInstance;
+  TeamUserRelationDao? _teamUserRelationDaoInstance;
+
+  RuleDao? _ruleDaoInstance;
 
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
@@ -88,13 +90,15 @@ class _$OctopointsDb extends OctopointsDb {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `matches` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT NOT NULL, `gameMode` INTEGER NOT NULL, `points` INTEGER NOT NULL, `survivors` INTEGER NOT NULL, `isActive` INTEGER NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `matches` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `isActive` INTEGER NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `users` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `username` TEXT NOT NULL, `win` INTEGER NOT NULL, `lose` INTEGER NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `teams` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `matchId` INTEGER NOT NULL, `name` TEXT NOT NULL, `partial` INTEGER NOT NULL, `total` INTEGER NOT NULL, FOREIGN KEY (`matchId`) REFERENCES `matches` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `teams` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `matchId` INTEGER NOT NULL, `name` TEXT NOT NULL, `partial` INTEGER NOT NULL, `total` INTEGER NOT NULL, `status` INTEGER NOT NULL, FOREIGN KEY (`matchId`) REFERENCES `matches` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `jointeam` (`teamId` INTEGER NOT NULL, `userId` INTEGER NOT NULL, FOREIGN KEY (`teamId`) REFERENCES `teams` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, PRIMARY KEY (`teamId`, `userId`))');
+            'CREATE TABLE IF NOT EXISTS `teamUserRelation` (`teamId` INTEGER NOT NULL, `userId` INTEGER NOT NULL, FOREIGN KEY (`teamId`) REFERENCES `teams` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, PRIMARY KEY (`teamId`, `userId`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `rules` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `matchId` INTEGER NOT NULL, `ifArgument` INTEGER NOT NULL, `ifCondition` INTEGER NOT NULL, `ifValue` INTEGER NOT NULL, `thenArgument` INTEGER NOT NULL, `thenValue` INTEGER, FOREIGN KEY (`matchId`) REFERENCES `matches` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -118,8 +122,14 @@ class _$OctopointsDb extends OctopointsDb {
   }
 
   @override
-  JoinTeamDao get joinTeamDao {
-    return _joinTeamDaoInstance ??= _$JoinTeamDao(database, changeListener);
+  TeamUserRelationDao get teamUserRelationDao {
+    return _teamUserRelationDaoInstance ??=
+        _$TeamUserRelationDao(database, changeListener);
+  }
+
+  @override
+  RuleDao get ruleDao {
+    return _ruleDaoInstance ??= _$RuleDao(database, changeListener);
   }
 }
 
@@ -131,10 +141,7 @@ class _$MatchDao extends MatchDao {
             'matches',
             (MatchEntity item) => <String, Object?>{
                   'id': item.id,
-                  'description': item.description,
-                  'gameMode': item.gameMode,
-                  'points': item.points,
-                  'survivors': item.survivors,
+                  'name': item.name,
                   'isActive': item.isActive ? 1 : 0
                 }),
         _matchEntityUpdateAdapter = UpdateAdapter(
@@ -143,10 +150,7 @@ class _$MatchDao extends MatchDao {
             ['id'],
             (MatchEntity item) => <String, Object?>{
                   'id': item.id,
-                  'description': item.description,
-                  'gameMode': item.gameMode,
-                  'points': item.points,
-                  'survivors': item.survivors,
+                  'name': item.name,
                   'isActive': item.isActive ? 1 : 0
                 }),
         _matchEntityDeletionAdapter = DeletionAdapter(
@@ -155,10 +159,7 @@ class _$MatchDao extends MatchDao {
             ['id'],
             (MatchEntity item) => <String, Object?>{
                   'id': item.id,
-                  'description': item.description,
-                  'gameMode': item.gameMode,
-                  'points': item.points,
-                  'survivors': item.survivors,
+                  'name': item.name,
                   'isActive': item.isActive ? 1 : 0
                 });
 
@@ -177,14 +178,9 @@ class _$MatchDao extends MatchDao {
   @override
   Future<List<MatchEntity>> getMatches(bool active) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM matches WHERE isActive=?1 ORDER BY id DESC',
-        mapper: (Map<String, Object?> row) => MatchEntity(
-            row['id'] as int?,
-            row['description'] as String,
-            row['gameMode'] as int,
-            row['points'] as int,
-            row['survivors'] as int,
-            (row['isActive'] as int) != 0),
+        'SELECT * FROM matches WHERE isActive=?1 ORDER BY name',
+        mapper: (Map<String, Object?> row) => MatchEntity(row['id'] as int?,
+            row['name'] as String, (row['isActive'] as int) != 0),
         arguments: [active ? 1 : 0]);
   }
 
@@ -295,7 +291,8 @@ class _$TeamDao extends TeamDao {
                   'matchId': item.matchId,
                   'name': item.name,
                   'partial': item.partial,
-                  'total': item.total
+                  'total': item.total,
+                  'status': item.status
                 }),
         _teamEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -306,7 +303,8 @@ class _$TeamDao extends TeamDao {
                   'matchId': item.matchId,
                   'name': item.name,
                   'partial': item.partial,
-                  'total': item.total
+                  'total': item.total,
+                  'status': item.status
                 }),
         _teamEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -317,7 +315,8 @@ class _$TeamDao extends TeamDao {
                   'matchId': item.matchId,
                   'name': item.name,
                   'partial': item.partial,
-                  'total': item.total
+                  'total': item.total,
+                  'status': item.status
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -340,7 +339,8 @@ class _$TeamDao extends TeamDao {
             row['matchId'] as int,
             row['name'] as String,
             row['partial'] as int,
-            row['total'] as int),
+            row['total'] as int,
+            row['status'] as int),
         arguments: [id]);
   }
 
@@ -362,29 +362,29 @@ class _$TeamDao extends TeamDao {
   }
 }
 
-class _$JoinTeamDao extends JoinTeamDao {
-  _$JoinTeamDao(this.database, this.changeListener)
+class _$TeamUserRelationDao extends TeamUserRelationDao {
+  _$TeamUserRelationDao(this.database, this.changeListener)
       : _queryAdapter = QueryAdapter(database),
-        _joinTeamEntityInsertionAdapter = InsertionAdapter(
+        _teamUserRelationInsertionAdapter = InsertionAdapter(
             database,
-            'jointeam',
-            (JoinTeamEntity item) => <String, Object?>{
+            'teamUserRelation',
+            (TeamUserRelation item) => <String, Object?>{
                   'teamId': item.teamId,
                   'userId': item.userId
                 }),
-        _joinTeamEntityUpdateAdapter = UpdateAdapter(
+        _teamUserRelationUpdateAdapter = UpdateAdapter(
             database,
-            'jointeam',
+            'teamUserRelation',
             ['teamId', 'userId'],
-            (JoinTeamEntity item) => <String, Object?>{
+            (TeamUserRelation item) => <String, Object?>{
                   'teamId': item.teamId,
                   'userId': item.userId
                 }),
-        _joinTeamEntityDeletionAdapter = DeletionAdapter(
+        _teamUserRelationDeletionAdapter = DeletionAdapter(
             database,
-            'jointeam',
+            'teamUserRelation',
             ['teamId', 'userId'],
-            (JoinTeamEntity item) => <String, Object?>{
+            (TeamUserRelation item) => <String, Object?>{
                   'teamId': item.teamId,
                   'userId': item.userId
                 });
@@ -395,34 +395,126 @@ class _$JoinTeamDao extends JoinTeamDao {
 
   final QueryAdapter _queryAdapter;
 
-  final InsertionAdapter<JoinTeamEntity> _joinTeamEntityInsertionAdapter;
+  final InsertionAdapter<TeamUserRelation> _teamUserRelationInsertionAdapter;
 
-  final UpdateAdapter<JoinTeamEntity> _joinTeamEntityUpdateAdapter;
+  final UpdateAdapter<TeamUserRelation> _teamUserRelationUpdateAdapter;
 
-  final DeletionAdapter<JoinTeamEntity> _joinTeamEntityDeletionAdapter;
+  final DeletionAdapter<TeamUserRelation> _teamUserRelationDeletionAdapter;
 
   @override
   Future<List<UserEntity>> getTeammates(int teamId) async {
     return _queryAdapter.queryList(
-        'SELECT U.* FROM users U, jointeam J WHERE J.teamId=?1 AND J.userId=U.id',
+        'SELECT U.* FROM users U, teamUserRelation J WHERE J.teamId=?1 AND J.userId=U.id',
         mapper: (Map<String, Object?> row) => UserEntity(row['id'] as int?, row['username'] as String, row['win'] as int, row['lose'] as int),
         arguments: [teamId]);
   }
 
   @override
-  Future<int> create(JoinTeamEntity t) {
-    return _joinTeamEntityInsertionAdapter.insertAndReturnId(
+  Future<List<int>> addTeammates(List<TeamUserRelation> list) {
+    return _teamUserRelationInsertionAdapter.insertListAndReturnIds(
+        list, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> create(TeamUserRelation t) {
+    return _teamUserRelationInsertionAdapter.insertAndReturnId(
         t, OnConflictStrategy.abort);
   }
 
   @override
-  Future<int> modify(List<JoinTeamEntity> t) {
-    return _joinTeamEntityUpdateAdapter.updateListAndReturnChangedRows(
+  Future<int> modify(List<TeamUserRelation> t) {
+    return _teamUserRelationUpdateAdapter.updateListAndReturnChangedRows(
         t, OnConflictStrategy.abort);
   }
 
   @override
-  Future<int> remove(JoinTeamEntity t) {
-    return _joinTeamEntityDeletionAdapter.deleteAndReturnChangedRows(t);
+  Future<int> remove(TeamUserRelation t) {
+    return _teamUserRelationDeletionAdapter.deleteAndReturnChangedRows(t);
+  }
+}
+
+class _$RuleDao extends RuleDao {
+  _$RuleDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database),
+        _ruleEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'rules',
+            (RuleEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'matchId': item.matchId,
+                  'ifArgument': item.ifArgument,
+                  'ifCondition': item.ifCondition,
+                  'ifValue': item.ifValue,
+                  'thenArgument': item.thenArgument,
+                  'thenValue': item.thenValue
+                }),
+        _ruleEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'rules',
+            ['id'],
+            (RuleEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'matchId': item.matchId,
+                  'ifArgument': item.ifArgument,
+                  'ifCondition': item.ifCondition,
+                  'ifValue': item.ifValue,
+                  'thenArgument': item.thenArgument,
+                  'thenValue': item.thenValue
+                }),
+        _ruleEntityDeletionAdapter = DeletionAdapter(
+            database,
+            'rules',
+            ['id'],
+            (RuleEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'matchId': item.matchId,
+                  'ifArgument': item.ifArgument,
+                  'ifCondition': item.ifCondition,
+                  'ifValue': item.ifValue,
+                  'thenArgument': item.thenArgument,
+                  'thenValue': item.thenValue
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<RuleEntity> _ruleEntityInsertionAdapter;
+
+  final UpdateAdapter<RuleEntity> _ruleEntityUpdateAdapter;
+
+  final DeletionAdapter<RuleEntity> _ruleEntityDeletionAdapter;
+
+  @override
+  Future<List<RuleEntity>> getRules(int id) async {
+    return _queryAdapter.queryList('SELECT * FROM rules WHERE matchId=?1',
+        mapper: (Map<String, Object?> row) => RuleEntity(
+            row['id'] as int?,
+            row['matchId'] as int,
+            row['ifArgument'] as int,
+            row['ifCondition'] as int,
+            row['ifValue'] as int,
+            row['thenArgument'] as int,
+            row['thenValue'] as int?),
+        arguments: [id]);
+  }
+
+  @override
+  Future<int> create(RuleEntity t) {
+    return _ruleEntityInsertionAdapter.insertAndReturnId(
+        t, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> modify(List<RuleEntity> t) {
+    return _ruleEntityUpdateAdapter.updateListAndReturnChangedRows(
+        t, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> remove(RuleEntity t) {
+    return _ruleEntityDeletionAdapter.deleteAndReturnChangedRows(t);
   }
 }

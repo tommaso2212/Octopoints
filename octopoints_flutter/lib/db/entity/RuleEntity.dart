@@ -1,7 +1,7 @@
 import 'package:floor/floor.dart';
 import 'package:octopoints_flutter/db/entity/MatchEntity.dart';
 
-@Entity(tableName: 'teams', foreignKeys: [
+@Entity(tableName: 'rules', foreignKeys: [
   ForeignKey(
     childColumns: ['matchId'],
     parentColumns: ['id'],
@@ -9,21 +9,23 @@ import 'package:octopoints_flutter/db/entity/MatchEntity.dart';
     onDelete: ForeignKeyAction.cascade,
   )
 ])
-class TeamEntity {
+class RuleEntity {
   @PrimaryKey(autoGenerate: true)
   final int? id;
   final int matchId;
-  final String name;
-  final int partial;
-  final int total;
-  final int status;
+  final int ifArgument;
+  final int ifCondition;
+  final int ifValue;
+  final int thenArgument;
+  final int? thenValue;
 
-  TeamEntity(
+  RuleEntity(
     this.id,
     this.matchId,
-    this.name,
-    this.partial,
-    this.total,
-    this.status,
+    this.ifArgument,
+    this.ifCondition,
+    this.ifValue,
+    this.thenArgument,
+    this.thenValue,
   );
 }

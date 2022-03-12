@@ -8,5 +8,10 @@ class UserEntity {
   final int win;
   final int lose;
 
-  UserEntity(this.id, this.username, this.win, this.lose);
+  UserEntity(
+    this.id,
+    this.username,
+    this.win,
+    this.lose,
+  );
 }

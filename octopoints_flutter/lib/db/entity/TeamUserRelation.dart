@@ -2,7 +2,7 @@ import 'package:floor/floor.dart';
 import 'package:octopoints_flutter/db/entity/TeamEntity.dart';
 import 'package:octopoints_flutter/db/entity/UserEntity.dart';
 
-@Entity(tableName: 'jointeam', primaryKeys: [
+@Entity(tableName: 'teamUserRelation', primaryKeys: [
   'teamId',
   'userId'
 ], foreignKeys: [
@@ -17,9 +17,12 @@ import 'package:octopoints_flutter/db/entity/UserEntity.dart';
       entity: UserEntity,
       onDelete: ForeignKeyAction.cascade)
 ])
-class JoinTeamEntity {
+class TeamUserRelation {
   final int teamId;
   final int userId;
 
-  JoinTeamEntity(this.teamId, this.userId);
+  TeamUserRelation(
+    this.teamId,
+    this.userId,
+  );
 }
