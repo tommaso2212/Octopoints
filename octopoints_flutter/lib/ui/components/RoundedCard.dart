@@ -7,14 +7,22 @@ class RoundedCard extends StatelessWidget {
   final Widget child;
   final void Function()? onDelete;
   final void Function()? onTap;
+  final void Function()? onLongPress;
   final Color backgroundColor;
 
-  const RoundedCard(this.child, {this.onDelete, this.onTap, this.backgroundColor = OctopointsTheme.lightGrey});
+  const RoundedCard(
+    this.child, {
+    this.onDelete,
+    this.onTap,
+    this.onLongPress,
+    this.backgroundColor = OctopointsTheme.lightGrey,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+      onLongPress: onLongPress,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         decoration: BoxDecoration(
@@ -26,17 +34,17 @@ class RoundedCard extends StatelessWidget {
           children: [
             onDelete != null
                 ? Positioned.fill(
-              child: Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  onPressed: () =>
-                      ConfirmDialog.show(context, 'Eliminare?')
-                          .then((value) => value! ? onDelete!() : null),
-                  icon: const Icon(Icons.delete),
-                  color: Colors.white,
-                ),
-              ),
-            )
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        onPressed: () =>
+                            ConfirmDialog.show(context, 'Eliminare?')
+                                .then((value) => value! ? onDelete!() : null),
+                        icon: const Icon(Icons.delete),
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
                 : const SizedBox.shrink(),
             Center(
               child: child,
