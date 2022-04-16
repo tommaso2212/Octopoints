@@ -4,6 +4,6 @@ import 'package:octopoints_flutter/db/entity/TeamEntity.dart';
 
 @dao
 abstract class TeamDao extends IDao<TeamEntity> {
-  @Query('SELECT * FROM teams WHERE matchId=:id')
+  @Query('SELECT * FROM teams WHERE matchId=:id ORDER BY total DESC')
   Future<List<TeamEntity>> getTeamsByMatchId(int id);
 }

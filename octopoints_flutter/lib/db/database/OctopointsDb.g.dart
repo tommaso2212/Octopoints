@@ -333,7 +333,8 @@ class _$TeamDao extends TeamDao {
 
   @override
   Future<List<TeamEntity>> getTeamsByMatchId(int id) async {
-    return _queryAdapter.queryList('SELECT * FROM teams WHERE matchId=?1',
+    return _queryAdapter.queryList(
+        'SELECT * FROM teams WHERE matchId=?1 ORDER BY total DESC',
         mapper: (Map<String, Object?> row) => TeamEntity(
             row['id'] as int?,
             row['matchId'] as int,

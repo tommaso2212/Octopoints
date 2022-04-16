@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/ui/components/TextInputField.dart';
 import 'package:octopoints_flutter/ui/components/modal/CreateModal.dart';
-import 'package:octopoints_flutter/ui/providers/MatchProvider.dart';
+import 'package:octopoints_flutter/ui/providers/TeamProvider.dart';
 import 'package:provider/provider.dart';
 
-class CreateMatchModal extends StatefulWidget {
+class CreateTeamModal extends StatefulWidget {
+
   @override
-  _CreateMatchModalState createState() => _CreateMatchModalState();
+  State<CreateTeamModal> createState() => _CreateTeamModalState();
 }
 
-class _CreateMatchModalState extends State<CreateMatchModal> {
+class _CreateTeamModalState extends State<CreateTeamModal> {
   final TextEditingController _controller = TextEditingController();
   bool isValid = false;
 
@@ -18,8 +19,8 @@ class _CreateMatchModalState extends State<CreateMatchModal> {
     super.initState();
   }
 
-  void createMatch(BuildContext context) {
-    context.read<MatchProvider>().createMatch(
+  void createTeam(BuildContext context) {
+    context.read<TeamProvider>().createTeam(
           _controller.text,
         );
     Navigator.pop(context);
@@ -28,18 +29,18 @@ class _CreateMatchModalState extends State<CreateMatchModal> {
   @override
   Widget build(BuildContext context) {
     return CreateModal(
-      title: 'Nuova partita',
+      title: 'Nuova squadra',
       formInputs: [
         TextInputField(
           controller: _controller,
-          label: 'Nome Partita',
+          label: 'Nome squadra',
           onChanged: () => setState((){
             isValid = _controller.text.isNotEmpty;
           }),
         ),
       ],
       isValid: isValid,
-      onConfirm: () => createMatch(context),
+      onConfirm: () => createTeam(context),
     );
   }
 }

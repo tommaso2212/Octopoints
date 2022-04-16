@@ -7,6 +7,6 @@ abstract class TeamService {
   Future<int> deleteTeam(Team team);
   Future<List<Team>> getTeamsByMatchId(int id);
   Future<List<int>> addTeammates(int teamId, List<User> users);
-  Future<List<User>> getTeammates(int teamId);
   Future<int> removeTeammates(int teamId, int userId);
+  Future<Map<User, bool>> getAvailableTeammates(Team team);
 }

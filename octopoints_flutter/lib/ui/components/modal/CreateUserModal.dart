@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/ui/components/TextInputField.dart';
 import 'package:octopoints_flutter/ui/components/modal/CreateModal.dart';
-import 'package:octopoints_flutter/ui/providers/MatchProvider.dart';
+import 'package:octopoints_flutter/ui/providers/UserProvider.dart';
 import 'package:provider/provider.dart';
 
-class CreateMatchModal extends StatefulWidget {
+class CreateUserModal extends StatefulWidget {
+
   @override
-  _CreateMatchModalState createState() => _CreateMatchModalState();
+  State<CreateUserModal> createState() => _CreateUserModalState();
 }
 
-class _CreateMatchModalState extends State<CreateMatchModal> {
+class _CreateUserModalState extends State<CreateUserModal> {
   final TextEditingController _controller = TextEditingController();
   bool isValid = false;
 
@@ -18,8 +19,8 @@ class _CreateMatchModalState extends State<CreateMatchModal> {
     super.initState();
   }
 
-  void createMatch(BuildContext context) {
-    context.read<MatchProvider>().createMatch(
+  void createUser(BuildContext context) {
+    context.read<UserProvider>().createUser(
           _controller.text,
         );
     Navigator.pop(context);
@@ -39,7 +40,7 @@ class _CreateMatchModalState extends State<CreateMatchModal> {
         ),
       ],
       isValid: isValid,
-      onConfirm: () => createMatch(context),
+      onConfirm: () => createUser(context),
     );
   }
 }

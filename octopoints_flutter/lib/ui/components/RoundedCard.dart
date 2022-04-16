@@ -32,23 +32,24 @@ class RoundedCard extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Stack(
           children: [
+            child,
             onDelete != null
-                ? Positioned.fill(
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: IconButton(
-                        onPressed: () =>
-                            ConfirmDialog.show(context, 'Eliminare?')
-                                .then((value) => value! ? onDelete!() : null),
-                        icon: const Icon(Icons.delete),
-                        color: Colors.white,
-                      ),
+                ? Positioned.directional(
+                  end: 0,
+                  textDirection: TextDirection.ltr,
+                  child: GestureDetector(
+                    onTap: () =>
+                        ConfirmDialog.show(context, 'Eliminare?').then(
+                      (value) => value! ? onDelete!() : null,
                     ),
-                  )
+                    child: const Icon(
+                      Icons.delete,
+                      color: OctopointsTheme.primaryColor,
+                
+                    ),
+                  ),
+                )
                 : const SizedBox.shrink(),
-            Center(
-              child: child,
-            ),
           ],
         ),
       ),

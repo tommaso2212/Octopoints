@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:octopoints_flutter/service/model/Match.dart';
+import 'package:octopoints_flutter/ui/components/CreateFAB.dart';
 import 'package:octopoints_flutter/ui/components/OctopointsProgressIndicator.dart';
 import 'package:octopoints_flutter/ui/components/RoundedCard.dart';
+import 'package:octopoints_flutter/ui/components/modal/BaseModal.dart';
+import 'package:octopoints_flutter/ui/components/modal/CreateMatchModal.dart';
+import 'package:octopoints_flutter/ui/pages/RulePage.dart';
+import 'package:octopoints_flutter/ui/pages/TeamPage.dart';
+import 'package:octopoints_flutter/ui/pages/UserPage.dart';
 import 'package:octopoints_flutter/ui/providers/MatchProvider.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +27,7 @@ class HomePage extends StatelessWidget {
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Container(), //user page
+                builder: (context) => UserPage(), //user page
               ),
             ),
             icon: const Icon(
@@ -35,20 +42,58 @@ class HomePage extends StatelessWidget {
         builder: (context, _) => FutureBuilder(
           future: context.select<MatchProvider, Future<List<Match>>>(
               (provider) => provider.data),
-          initialData: [Match(name: "Prova")],
+          initialData: const <Match>[],
           builder: (context, AsyncSnapshot<List<Match>> snap) {
             if (snap.connectionState == ConnectionState.waiting) {
               return const OctopointsProgressIndicator();
             } else if (snap.hasError) {
-              return Text("Errore");
+              return Text("Errore" + snap.error.toString());
             } else {
               return ListView.builder(
-                itemBuilder: (context, index) => RoundedCard(
-                  Text(snap.data![index].name),
-                ),
+                itemCount: snap.data!.length,
+                itemBuilder: (context, index) {
+                  Match match = snap.data![index];
+                  return RoundedCard(
+                    Container(
+                      margin: const EdgeInsets.only(right: 40),
+                      child: Text(
+                        match.name,
+                        overflow: TextOverflow.clip,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TeamPage(match), //user page
+                      ),
+                    ),
+                    onDelete: (() => _matchProvider.deleteMatch(match)),
+                    onLongPress: () async {
+                      match.rules = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RulePage(match), //user page
+                        ),
+                      );
+                    },
+                  );
+                },
               );
             }
           },
+        ),
+      ),
+      floatingActionButton: CreateFAB(
+        onPressed: () => BaseModal.showModal(
+          context,
+          ChangeNotifierProvider.value(
+            value: _matchProvider,
+            child: CreateMatchModal(),
+          ),
         ),
       ),
     );

@@ -24,3 +24,13 @@ enum TeamStatusEnum {
   win,
   lose,
 }
+
+extension TeamStatusEnumExtension on TeamStatusEnum {
+  String get name {
+    switch(this){
+      case TeamStatusEnum.win: return "Vincitore";
+      case TeamStatusEnum.lose: return "Sconfitto";
+      case TeamStatusEnum.playing: return "Playing";
+    }
+  }
+}

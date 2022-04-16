@@ -28,6 +28,7 @@ class BaseModal extends StatelessWidget {
     return Container(
       padding: padding,
       child: child,
+      margin: EdgeInsets.only(bottom: 20),
     );
   }
 }

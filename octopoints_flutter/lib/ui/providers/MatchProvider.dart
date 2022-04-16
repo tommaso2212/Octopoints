@@ -9,12 +9,11 @@ class MatchProvider extends OctopointsProvider<Match> {
   }
 
   void createMatch(String name) async {
-    Match match = await DBService.matchService.createMatch(Match(name: name));
-    (await data).add(match);
+    create(await DBService.matchService.createMatch(Match(name: name)));
   }
 
   void deleteMatch(Match match) async {
     await DBService.matchService.deleteMatch(match);
-    (await data).remove(match);
+    delete(match);
   }
 }
