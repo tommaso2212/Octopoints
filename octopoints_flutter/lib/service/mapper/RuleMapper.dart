@@ -6,11 +6,10 @@ extension RuleModelMapper on Rule {
     return RuleEntity(
       id != 0 ? id : null,
       matchId,
-      ifArgument.index,
-      ifCondition.index,
-      ifValue,
-      thenArgument.index,
-      thenValue,
+      numVincitori,
+      total,
+      totalIncrement,
+      partialIncrement
     );
   }
 
@@ -18,11 +17,10 @@ extension RuleModelMapper on Rule {
     return Rule(
       id: id,
       matchId: matchId,
-      ifArgument: ifArgument,
-      ifCondition: ifCondition,
-      ifValue: ifValue,
-      thenArgument: thenArgument,
-      thenValue: thenValue,
+      numVincitori: numVincitori,
+      total: total,
+      totalIncrement: totalIncrement,
+      partialIncrement: partialIncrement
     );
   }
 }
@@ -32,11 +30,10 @@ extension RuleEntityMapper on RuleEntity {
     return Rule(
       id: id!,
       matchId: matchId,
-      ifArgument: RuleIfArgumentEnum.values[ifArgument],
-      ifCondition: RuleIfConditionEnum.values[ifCondition],
-      ifValue: ifValue,
-      thenArgument: RuleThenArgumentEnum.values[thenArgument],
-      thenValue: thenValue,
+      numVincitori: numVincitori,
+      total: total,
+      totalIncrement: totalIncrement,
+      partialIncrement: partialIncrement
     );
   }
 }

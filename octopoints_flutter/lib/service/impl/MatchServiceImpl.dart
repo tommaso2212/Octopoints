@@ -1,7 +1,5 @@
 import 'package:octopoints_flutter/db/DbSingleton.dart';
 import 'package:octopoints_flutter/db/dao/MatchDao.dart';
-import 'package:octopoints_flutter/service/MatchService.dart';
-import 'package:octopoints_flutter/service/model/Match.dart';
 import 'package:octopoints_flutter/service/mapper/MatchMapper.dart';
 import 'package:octopoints_flutter/service/service.dart';
 
@@ -13,13 +11,7 @@ class MatchServiceImpl implements MatchService {
     int id = await _matchDao.create(match.toMatchEntity());
     return match.setId(id);
   }
-
-  @override
-  Future<int> archiveMatch(Match match) {
-    match.isActive = false;
-    return _matchDao.modify([match.toMatchEntity()]);
-  }
-
+  
   @override
   Future<int> deleteMatch(Match match) {
     return _matchDao.remove(match.toMatchEntity());
@@ -35,4 +27,5 @@ class MatchServiceImpl implements MatchService {
     }
     return matches;
   }
+
 }

@@ -6,7 +6,6 @@ extension TeamModelMapper on Team {
     return TeamEntity(
       id != 0 ? id : null,
       matchId,
-      name,
       partial,
       total,
       status.index,
@@ -17,7 +16,6 @@ extension TeamModelMapper on Team {
     return Team(
       id: id,
       matchId: matchId,
-      name: name,
       total: total,
       partial: partial,
       status: status,
@@ -30,7 +28,6 @@ extension TeamEntityMapper on TeamEntity {
     return Team(
       id: id!,
       matchId: matchId,
-      name: name,
       total: total,
       partial: partial,
       status: TeamStatusEnum.values[status],

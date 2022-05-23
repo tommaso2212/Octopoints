@@ -13,19 +13,17 @@ class RuleEntity {
   @PrimaryKey(autoGenerate: true)
   final int? id;
   final int matchId;
-  final int ifArgument;
-  final int ifCondition;
-  final int ifValue;
-  final int thenArgument;
-  final int? thenValue;
+  final int numVincitori;
+  final int total;
+  final int totalIncrement;
+  final bool partialIncrement;
 
   RuleEntity(
     this.id,
     this.matchId,
-    this.ifArgument,
-    this.ifCondition,
-    this.ifValue,
-    this.thenArgument,
-    this.thenValue,
+    this.numVincitori,
+    this.total,
+    this.totalIncrement,
+    this.partialIncrement
   );
 }

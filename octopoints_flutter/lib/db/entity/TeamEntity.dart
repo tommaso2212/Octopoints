@@ -13,7 +13,6 @@ class TeamEntity {
   @PrimaryKey(autoGenerate: true)
   final int? id;
   final int matchId;
-  final String name;
   final int partial;
   final int total;
   final int status;
@@ -21,9 +20,8 @@ class TeamEntity {
   TeamEntity(
     this.id,
     this.matchId,
-    this.name,
     this.partial,
     this.total,
-    this.status,
+    this.status
   );
 }

@@ -90,15 +90,15 @@ class _$OctopointsDb extends OctopointsDb {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `matches` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `isActive` INTEGER NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `matches` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `users` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `username` TEXT NOT NULL, `win` INTEGER NOT NULL, `lose` INTEGER NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `teams` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `matchId` INTEGER NOT NULL, `name` TEXT NOT NULL, `partial` INTEGER NOT NULL, `total` INTEGER NOT NULL, `status` INTEGER NOT NULL, FOREIGN KEY (`matchId`) REFERENCES `matches` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `teams` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `matchId` INTEGER NOT NULL, `partial` INTEGER NOT NULL, `total` INTEGER NOT NULL, `status` INTEGER NOT NULL, FOREIGN KEY (`matchId`) REFERENCES `matches` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `teamUserRelation` (`teamId` INTEGER NOT NULL, `userId` INTEGER NOT NULL, FOREIGN KEY (`teamId`) REFERENCES `teams` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, PRIMARY KEY (`teamId`, `userId`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `rules` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `matchId` INTEGER NOT NULL, `ifArgument` INTEGER NOT NULL, `ifCondition` INTEGER NOT NULL, `ifValue` INTEGER NOT NULL, `thenArgument` INTEGER NOT NULL, `thenValue` INTEGER, FOREIGN KEY (`matchId`) REFERENCES `matches` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `rules` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `matchId` INTEGER NOT NULL, `numVincitori` INTEGER NOT NULL, `total` INTEGER NOT NULL, `totalIncrement` INTEGER NOT NULL, `partialIncrement` INTEGER NOT NULL, FOREIGN KEY (`matchId`) REFERENCES `matches` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -139,29 +139,20 @@ class _$MatchDao extends MatchDao {
         _matchEntityInsertionAdapter = InsertionAdapter(
             database,
             'matches',
-            (MatchEntity item) => <String, Object?>{
-                  'id': item.id,
-                  'name': item.name,
-                  'isActive': item.isActive ? 1 : 0
-                }),
+            (MatchEntity item) =>
+                <String, Object?>{'id': item.id, 'name': item.name}),
         _matchEntityUpdateAdapter = UpdateAdapter(
             database,
             'matches',
             ['id'],
-            (MatchEntity item) => <String, Object?>{
-                  'id': item.id,
-                  'name': item.name,
-                  'isActive': item.isActive ? 1 : 0
-                }),
+            (MatchEntity item) =>
+                <String, Object?>{'id': item.id, 'name': item.name}),
         _matchEntityDeletionAdapter = DeletionAdapter(
             database,
             'matches',
             ['id'],
-            (MatchEntity item) => <String, Object?>{
-                  'id': item.id,
-                  'name': item.name,
-                  'isActive': item.isActive ? 1 : 0
-                });
+            (MatchEntity item) =>
+                <String, Object?>{'id': item.id, 'name': item.name});
 
   final sqflite.DatabaseExecutor database;
 
@@ -179,8 +170,8 @@ class _$MatchDao extends MatchDao {
   Future<List<MatchEntity>> getMatches(bool active) async {
     return _queryAdapter.queryList(
         'SELECT * FROM matches WHERE isActive=?1 ORDER BY name',
-        mapper: (Map<String, Object?> row) => MatchEntity(row['id'] as int?,
-            row['name'] as String, (row['isActive'] as int) != 0),
+        mapper: (Map<String, Object?> row) =>
+            MatchEntity(row['id'] as int?, row['name'] as String),
         arguments: [active ? 1 : 0]);
   }
 
@@ -289,7 +280,6 @@ class _$TeamDao extends TeamDao {
             (TeamEntity item) => <String, Object?>{
                   'id': item.id,
                   'matchId': item.matchId,
-                  'name': item.name,
                   'partial': item.partial,
                   'total': item.total,
                   'status': item.status
@@ -301,7 +291,6 @@ class _$TeamDao extends TeamDao {
             (TeamEntity item) => <String, Object?>{
                   'id': item.id,
                   'matchId': item.matchId,
-                  'name': item.name,
                   'partial': item.partial,
                   'total': item.total,
                   'status': item.status
@@ -313,7 +302,6 @@ class _$TeamDao extends TeamDao {
             (TeamEntity item) => <String, Object?>{
                   'id': item.id,
                   'matchId': item.matchId,
-                  'name': item.name,
                   'partial': item.partial,
                   'total': item.total,
                   'status': item.status
@@ -338,7 +326,6 @@ class _$TeamDao extends TeamDao {
         mapper: (Map<String, Object?> row) => TeamEntity(
             row['id'] as int?,
             row['matchId'] as int,
-            row['name'] as String,
             row['partial'] as int,
             row['total'] as int,
             row['status'] as int),
@@ -443,11 +430,10 @@ class _$RuleDao extends RuleDao {
             (RuleEntity item) => <String, Object?>{
                   'id': item.id,
                   'matchId': item.matchId,
-                  'ifArgument': item.ifArgument,
-                  'ifCondition': item.ifCondition,
-                  'ifValue': item.ifValue,
-                  'thenArgument': item.thenArgument,
-                  'thenValue': item.thenValue
+                  'numVincitori': item.numVincitori,
+                  'total': item.total,
+                  'totalIncrement': item.totalIncrement,
+                  'partialIncrement': item.partialIncrement ? 1 : 0
                 }),
         _ruleEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -456,11 +442,10 @@ class _$RuleDao extends RuleDao {
             (RuleEntity item) => <String, Object?>{
                   'id': item.id,
                   'matchId': item.matchId,
-                  'ifArgument': item.ifArgument,
-                  'ifCondition': item.ifCondition,
-                  'ifValue': item.ifValue,
-                  'thenArgument': item.thenArgument,
-                  'thenValue': item.thenValue
+                  'numVincitori': item.numVincitori,
+                  'total': item.total,
+                  'totalIncrement': item.totalIncrement,
+                  'partialIncrement': item.partialIncrement ? 1 : 0
                 }),
         _ruleEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -469,11 +454,10 @@ class _$RuleDao extends RuleDao {
             (RuleEntity item) => <String, Object?>{
                   'id': item.id,
                   'matchId': item.matchId,
-                  'ifArgument': item.ifArgument,
-                  'ifCondition': item.ifCondition,
-                  'ifValue': item.ifValue,
-                  'thenArgument': item.thenArgument,
-                  'thenValue': item.thenValue
+                  'numVincitori': item.numVincitori,
+                  'total': item.total,
+                  'totalIncrement': item.totalIncrement,
+                  'partialIncrement': item.partialIncrement ? 1 : 0
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -494,11 +478,10 @@ class _$RuleDao extends RuleDao {
         mapper: (Map<String, Object?> row) => RuleEntity(
             row['id'] as int?,
             row['matchId'] as int,
-            row['ifArgument'] as int,
-            row['ifCondition'] as int,
-            row['ifValue'] as int,
-            row['thenArgument'] as int,
-            row['thenValue'] as int?),
+            row['numVincitori'] as int,
+            row['total'] as int,
+            row['totalIncrement'] as int,
+            (row['partialIncrement'] as int) != 0),
         arguments: [id]);
   }
 
