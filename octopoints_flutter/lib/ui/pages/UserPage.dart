@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/service/service.dart';
 import 'package:octopoints_flutter/ui/components/CreateFAB.dart';
-import 'package:octopoints_flutter/ui/components/OctopointsProgressIndicator.dart';
+import 'package:octopoints_flutter/ui/components/FilterableList.dart';
 import 'package:octopoints_flutter/ui/components/RoundedCard.dart';
 import 'package:octopoints_flutter/ui/components/modal/BaseModal.dart';
 import 'package:octopoints_flutter/ui/components/modal/CreateUserModal.dart';
@@ -10,6 +10,54 @@ import 'package:provider/provider.dart';
 
 class UserPage extends StatelessWidget {
   final UserProvider _userProvider = UserProvider();
+
+  Widget buildUserCard(User user, BuildContext context) {
+    return RoundedCard(
+      Container(
+        margin: const EdgeInsets.only(right: 40),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              user.username,
+              overflow: TextOverflow.clip,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Row(
+              children: [
+                const Icon(
+                  Icons.keyboard_arrow_up,
+                  size: 32,
+                  color: Colors.white,
+                ),
+                Text(
+                  user.win.toString(),
+                  style: const TextStyle(
+                    fontSize: 22,
+                  ),
+                ),
+                const Icon(
+                  Icons.keyboard_arrow_down,
+                  size: 32,
+                  color: Colors.white,
+                ),
+                Text(
+                  user.lose.toString(),
+                  style: const TextStyle(
+                    fontSize: 22,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      onDelete: (() => _userProvider.deleteUser(user)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,69 +69,12 @@ class UserPage extends StatelessWidget {
       ),
       body: ChangeNotifierProvider.value(
         value: _userProvider,
-        builder: (context, _) => FutureBuilder(
-          future: context.select<UserProvider, Future<List<User>>>(
-              (provider) => provider.data),
-          initialData: const <User>[],
-          builder: (context, AsyncSnapshot<List<User>> snap) {
-            if (snap.connectionState == ConnectionState.waiting) {
-              return const OctopointsProgressIndicator();
-            } else if (snap.hasError) {
-              return Text("Errore" + snap.error.toString());
-            } else {
-              return ListView.builder(
-                itemCount: snap.data!.length,
-                itemBuilder: (context, index) {
-                  User user = snap.data![index];
-                  return RoundedCard(
-                    Container(
-                      margin: const EdgeInsets.only(right: 40),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            user.username,
-                            overflow: TextOverflow.clip,
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.keyboard_arrow_up,
-                                size: 32,
-                                color: Colors.white,
-                              ),
-                              Text(
-                                user.win.toString(),
-                                style: const TextStyle(
-                                  fontSize: 22,
-                                ),
-                              ),
-                              const Icon(
-                                Icons.keyboard_arrow_down,
-                                size: 32,
-                                color: Colors.white,
-                              ),
-                              Text(
-                                user.lose.toString(),
-                                style: const TextStyle(
-                                  fontSize: 22,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    onDelete: (() => _userProvider.deleteUser(user)),
-                  );
-                },
-              );
-            }
-          },
+        builder: (context, _) => FilterableList(
+          context.select<UserProvider, Future<List<User>>>(
+              (provider) => provider.getData()),
+          (element, filterText) =>
+              (element as User).username.contains(filterText),
+          (user, context) => buildUserCard(user, context),
         ),
       ),
       floatingActionButton: CreateFAB(

@@ -18,8 +18,8 @@ class MatchServiceImpl implements MatchService {
   }
 
   @override
-  Future<List<Match>> getMatches(bool active) async {
-    List<Match> matches = (await _matchDao.getMatches(active))
+  Future<List<Match>> getMatches() async {
+    List<Match> matches = (await _matchDao.getMatches())
         .map((e) => e.toMatchModel())
         .toList();
     for(Match match in matches){

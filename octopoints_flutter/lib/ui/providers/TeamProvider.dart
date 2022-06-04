@@ -14,7 +14,7 @@ class TeamProvider extends OctopointsProvider<Team> {
   }
 
   void createTeam(String name) async {
-    create(await DBService.teamService.createTeam(Team(matchId: _match.id, name: name)));
+    create(await DBService.teamService.createTeam(Team(matchId: _match.id)));
   }
 
   void deleteTeam(Team team) async {
@@ -28,26 +28,6 @@ class TeamProvider extends OctopointsProvider<Team> {
         .indexWhere((Team team) => team.id == teamToUpdate.id)] = teamToUpdate;
     (await data).sort(((a, b) => -a.total.compareTo(b.total)));
     notifyListeners();
-  }
-
-  void checkRules(Team teamToUpdate){
-    for(Rule rule in _match.rules){
-      switch(rule.ifArgument){
-        case RuleIfArgumentEnum.total: {
-          
-          break;
-        }
-        case RuleIfArgumentEnum.partial: {
-          break;
-        }
-        case RuleIfArgumentEnum.winners: {
-          break;
-        }
-        case RuleIfArgumentEnum.losers: {
-          break;
-        }
-      }
-    }
   }
 
   void endGame(){

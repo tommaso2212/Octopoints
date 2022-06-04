@@ -49,14 +49,6 @@ class TeamPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            team.name,
-                            overflow: TextOverflow.clip,
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
                           Row(
                             children: [
                               const Text(

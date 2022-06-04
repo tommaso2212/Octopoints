@@ -5,7 +5,7 @@ class MatchProvider extends OctopointsProvider<Match> {
 
   @override
   Future<List<Match>> getData() {
-    return DBService.matchService.getMatches(true);
+    return DBService.matchService.getMatches();
   }
 
   void createMatch(String name) async {

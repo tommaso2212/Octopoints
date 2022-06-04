@@ -25,11 +25,6 @@ class TeammatesPage extends StatelessWidget {
         return true;
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            _team.name,
-          ),
-        ),
         body: ChangeNotifierProvider.value(
           value: _teammatesProvider,
           builder: (context, _) => FutureBuilder(

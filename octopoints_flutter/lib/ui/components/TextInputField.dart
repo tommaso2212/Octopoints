@@ -1,25 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/ui/theme/OctopointsTheme.dart';
 
-class TextInputField extends TextField {
-  TextInputField({
-    required TextEditingController controller,
-    required String label,
-    required Function onChanged,
-    TextInputType textInputType = TextInputType.text,
-    bool autoFocus = true,
-  }) : super(
-          textAlign: TextAlign.center,
+class TextInputField extends StatelessWidget {
+
+  final TextEditingController controller;
+  final String label;
+  final Function onChanged;
+  final TextInputType textInputType;
+  final bool autoFocus;
+  late bool Function(String)? validateInput;
+
+  TextInputField ({
+    required this.controller,
+    required this.label,
+    required this.onChanged,
+    this.textInputType = TextInputType.text,
+    this.autoFocus = true,
+    this.validateInput,
+  }){
+    validateInput ??= (value) => value.isNotEmpty;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      textAlign: TextAlign.center,
           controller: controller,
           style: const TextStyle(
             color: Colors.white,
           ),
-          onChanged: (_) => onChanged(),
+          onChanged: (value) => validateInput!(value)? onChanged() : null,
           autofocus: autoFocus,
           keyboardType: textInputType,
           decoration: InputDecoration(
             hintText: controller.text,
-            errorText: controller.text.isEmpty ? "Non può essere vuoto" : null,
+            errorText: validateInput!(controller.text) ? null : "Invalid value",
             label: Text(
               label,
               style: const TextStyle(
@@ -31,7 +46,11 @@ class TextInputField extends TextField {
               borderRadius: BorderRadius.circular(7),
               borderSide: const BorderSide(color: OctopointsTheme.primaryColor),
             ),
-            border: const OutlineInputBorder(),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(7),
+              borderSide: const BorderSide(color: OctopointsTheme.lightGrey),
+            ),
           ),
-        );
+    );
+  }
 }

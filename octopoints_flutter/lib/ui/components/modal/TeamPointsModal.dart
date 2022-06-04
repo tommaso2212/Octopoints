@@ -43,16 +43,6 @@ class _TeamPointsModalState extends State<TeamPointsModal> {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 40),
-          child: Text(
-            widget.team.name,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-            ),
-          ),
-        ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,

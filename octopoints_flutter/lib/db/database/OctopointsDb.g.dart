@@ -167,12 +167,10 @@ class _$MatchDao extends MatchDao {
   final DeletionAdapter<MatchEntity> _matchEntityDeletionAdapter;
 
   @override
-  Future<List<MatchEntity>> getMatches(bool active) async {
-    return _queryAdapter.queryList(
-        'SELECT * FROM matches WHERE isActive=?1 ORDER BY name',
+  Future<List<MatchEntity>> getMatches() async {
+    return _queryAdapter.queryList('SELECT * FROM matches ORDER BY name',
         mapper: (Map<String, Object?> row) =>
-            MatchEntity(row['id'] as int?, row['name'] as String),
-        arguments: [active ? 1 : 0]);
+            MatchEntity(row['id'] as int?, row['name'] as String));
   }
 
   @override
