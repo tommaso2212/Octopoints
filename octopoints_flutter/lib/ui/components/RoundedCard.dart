@@ -39,7 +39,7 @@ class RoundedCard extends StatelessWidget {
                   textDirection: TextDirection.ltr,
                   child: GestureDetector(
                     onTap: () =>
-                        ConfirmDialog.show(context, 'Eliminare?').then(
+                        ConfirmDialog.show(context, 'Delete?').then(
                       (value) => value! ? onDelete!() : null,
                     ),
                     child: const Icon(

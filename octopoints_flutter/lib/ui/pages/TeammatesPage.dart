@@ -33,7 +33,7 @@ class TeammatesPage extends StatelessWidget {
             initialData: const <User>[],
             builder: (context, AsyncSnapshot<List<User>> snap) {
               if (snap.connectionState == ConnectionState.waiting) {
-                return const OctopointsProgressIndicator();
+                return OctopointsProgressIndicator();
               } else if (snap.hasError) {
                 return Text("Errore" + snap.error.toString());
               } else {

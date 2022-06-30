@@ -2,8 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:octopoints_flutter/db/DbSingleton.dart';
 import 'package:octopoints_flutter/service/DBService.dart';
 import 'package:octopoints_flutter/service/UserService.dart';
-import 'package:octopoints_flutter/service/model/Match.dart';
-import 'package:octopoints_flutter/service/model/Team.dart';
 import 'package:octopoints_flutter/service/model/User.dart';
 
 void main() {

@@ -28,7 +28,6 @@ class _TeamPointsModalState extends State<TeamPointsModal> {
     super.initState();
     _totalController.text = widget.team.total.toString();
     _partialController.text = widget.team.partial.toString();
-    print(widget.team.users.length);
   }
 
   void updateTeam(BuildContext context) {
@@ -64,12 +63,12 @@ class _TeamPointsModalState extends State<TeamPointsModal> {
               width: 180,
               height: 100,
               child: TextInputField(
-                controller: _totalController,
+                initialValue: widget.team.total.toString(),
                 label: 'Total',
                 textInputType:
                     const TextInputType.numberWithOptions(signed: true),
                 autoFocus: false,
-                onChanged: () => setState(() {
+                onChanged: (value) => setState(() {
                   isTotalValid = _totalController.text.isNotEmpty;
                   if (isTotalValid) {
                     widget.team.total = int.parse(_totalController.text);
@@ -114,12 +113,12 @@ class _TeamPointsModalState extends State<TeamPointsModal> {
               width: 150,
               height: 100,
               child: TextInputField(
-                controller: _partialController,
+                initialValue: widget.team.partial.toString(),
                 label: 'Partial',
                 textInputType:
                     const TextInputType.numberWithOptions(signed: true),
                 autoFocus: false,
-                onChanged: () => setState(() {
+                onChanged: (value) => setState(() {
                   isPartialValid = _partialController.text.isNotEmpty;
                   if (isPartialValid) {
                     widget.team.partial = int.parse(_partialController.text);

@@ -18,14 +18,10 @@ class MatchServiceImpl implements MatchService {
   }
 
   @override
-  Future<List<Match>> getMatches() async {
-    List<Match> matches = (await _matchDao.getMatches())
+  Future<List<Match>> getMatches({bool archived = false}) async {
+    return (await _matchDao.getMatches(archived))
         .map((e) => e.toMatchModel())
         .toList();
-    for(Match match in matches){
-      match.rules = await DBService.ruleService.getRulesByMatchId(match.id);
-    }
-    return matches;
   }
 
 }

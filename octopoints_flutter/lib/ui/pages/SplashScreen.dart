@@ -22,8 +22,8 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Padding(
+          children: [
+            const Padding(
               padding: EdgeInsets.all(8),
               child: Text(
                 'Octopoints',

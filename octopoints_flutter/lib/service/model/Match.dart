@@ -5,7 +5,7 @@ class Match {
   final int id;
   final String name;
   List<Team> teams = [];
-  List<Rule> rules = [];
+  Rule? rule;
 
   Match({
     this.id = 0,

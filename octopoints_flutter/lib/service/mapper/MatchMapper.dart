@@ -5,7 +5,8 @@ extension MatchModelMapper on Match {
   MatchEntity toMatchEntity() {
     return MatchEntity(
       id != 0 ? id : null,
-      name
+      name,
+      false
     );
   }
 

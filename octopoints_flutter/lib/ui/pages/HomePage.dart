@@ -5,6 +5,7 @@ import 'package:octopoints_flutter/ui/components/FilterableList.dart';
 import 'package:octopoints_flutter/ui/components/RoundedCard.dart';
 import 'package:octopoints_flutter/ui/components/modal/BaseModal.dart';
 import 'package:octopoints_flutter/ui/components/modal/CreateMatchModal.dart';
+import 'package:octopoints_flutter/ui/components/modal/RuleModal.dart';
 import 'package:octopoints_flutter/ui/pages/TeamPage.dart';
 import 'package:octopoints_flutter/ui/pages/UserPage.dart';
 import 'package:octopoints_flutter/ui/providers/MatchProvider.dart';
@@ -29,18 +30,16 @@ class HomePage extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => TeamPage(match), //user page
+          builder: (context) => TeamPage(match),
         ),
       ),
       onDelete: (() => _matchProvider.deleteMatch(match)),
-      onLongPress: () async {
-        match.rules = await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Container(), //rule page
-          ),
-        );
-      },
+      onLongPress: () => BaseModal.showModal(
+        context,
+        RuleModal(
+          match: match,
+        ),
+      ),
     );
   }
 
@@ -69,10 +68,11 @@ class HomePage extends StatelessWidget {
       body: ChangeNotifierProvider.value(
         value: _matchProvider,
         builder: (context, _) => FilterableList(
-          context.select<MatchProvider, Future<List<Match>>>(
-              (provider) => provider.getData()),
-          (element, filterText) => (element as Match).name.contains(filterText),
-          (match, context) => buildMatchCard(match, context),
+          list: context.select<MatchProvider, Future<List<Match>>>(
+              (provider) => provider.data),
+          filterListByText: (element, filterText) =>
+              (element as Match).name.contains(filterText),
+          elementToWidget: (match, context) => buildMatchCard(match, context),
         ),
       ),
       floatingActionButton: CreateFAB(

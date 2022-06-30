@@ -5,5 +5,5 @@ import 'package:octopoints_flutter/db/entity/RuleEntity.dart';
 @dao
 abstract class RuleDao extends IDao<RuleEntity> {
   @Query('SELECT * FROM rules WHERE matchId=:id')
-  Future<List<RuleEntity>> getRules(int id);
+  Future<RuleEntity?> getRule(int id);
 }

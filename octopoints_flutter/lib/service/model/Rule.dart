@@ -1,17 +1,23 @@
 class Rule {
   final int id;
   final int matchId;
-  final int numVincitori;
-  final int total;
-  final int totalIncrement;
-  final bool partialIncrement;
+  int winners;
+  int total;
 
   Rule({
     this.id = 0,
     required this.matchId,
-    required this.numVincitori,
+    required this.winners,
     required this.total,
-    required this.totalIncrement,
-    required this.partialIncrement
   });
+
+  Rule setTotal(int total){
+    this.total = total;
+    return this;
+  }
+
+  Rule setWinners(int winners){
+    this.winners = winners;
+    return this;
+  }
 }

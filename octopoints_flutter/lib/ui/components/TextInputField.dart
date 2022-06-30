@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/ui/theme/OctopointsTheme.dart';
 
-class TextInputField extends StatelessWidget {
+class TextInputField extends StatefulWidget {
 
-  final TextEditingController controller;
+  final String initialValue;
   final String label;
-  final Function onChanged;
+  final Function(String) onChanged;
   final TextInputType textInputType;
   final bool autoFocus;
   late bool Function(String)? validateInput;
 
   TextInputField ({
-    required this.controller,
+    required this.initialValue,
     required this.label,
     required this.onChanged,
     this.textInputType = TextInputType.text,
@@ -22,21 +22,40 @@ class TextInputField extends StatelessWidget {
   }
 
   @override
+  State<TextInputField> createState() => _TextInputFieldState();
+}
+
+class _TextInputFieldState extends State<TextInputField> {
+
+  TextEditingController controller = TextEditingController();
+  late bool isValid;
+
+  @override
+  void initState() {
+    controller.text = widget.initialValue;
+    isValid = widget.validateInput!(widget.initialValue);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TextField(
       textAlign: TextAlign.center,
-          controller: controller,
           style: const TextStyle(
             color: Colors.white,
           ),
-          onChanged: (value) => validateInput!(value)? onChanged() : null,
-          autofocus: autoFocus,
-          keyboardType: textInputType,
+          onChanged: (value) => setState(() {
+            isValid = widget.validateInput!(value);
+            if(isValid){
+              widget.onChanged(value);
+            }
+          }),
+          autofocus: widget.autoFocus,
+          keyboardType: widget.textInputType,
           decoration: InputDecoration(
-            hintText: controller.text,
-            errorText: validateInput!(controller.text) ? null : "Invalid value",
+            errorText: isValid ? null : "Invalid value",
             label: Text(
-              label,
+              widget.label,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,

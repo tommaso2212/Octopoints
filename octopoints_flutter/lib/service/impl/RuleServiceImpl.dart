@@ -19,7 +19,12 @@ class RuleServiceImpl implements RuleService {
   }
 
   @override
-  Future<List<Rule>> getRulesByMatchId(int id) async {
-    return (await _ruleDao.getRules(id)).map((e) => e.toRuleModel()).toList();
+  Future<Rule?> getRuleByMatchId(int id) async {
+    return await _ruleDao.getRule(id).then((value) => value.toRuleModel(),);
+  }
+
+  @override
+  Future<int> updateRule(Rule rule) {
+    return _ruleDao.modify([rule.toRuleEntity()]);
   }
 }

@@ -6,10 +6,8 @@ extension RuleModelMapper on Rule {
     return RuleEntity(
       id != 0 ? id : null,
       matchId,
-      numVincitori,
+      winners,
       total,
-      totalIncrement,
-      partialIncrement
     );
   }
 
@@ -17,23 +15,19 @@ extension RuleModelMapper on Rule {
     return Rule(
       id: id,
       matchId: matchId,
-      numVincitori: numVincitori,
+      winners: winners,
       total: total,
-      totalIncrement: totalIncrement,
-      partialIncrement: partialIncrement
     );
   }
 }
 
-extension RuleEntityMapper on RuleEntity {
-  Rule toRuleModel() {
-    return Rule(
-      id: id!,
-      matchId: matchId,
-      numVincitori: numVincitori,
-      total: total,
-      totalIncrement: totalIncrement,
-      partialIncrement: partialIncrement
-    );
+extension RuleEntityMapper on RuleEntity? {
+  Rule? toRuleModel() {
+    return this != null ? Rule(
+      id: this!.id!,
+      matchId: this!.matchId,
+      winners: this!.winners,
+      total: this!.total,
+    ):null;
   }
 }

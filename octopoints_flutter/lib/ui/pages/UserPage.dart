@@ -70,11 +70,11 @@ class UserPage extends StatelessWidget {
       body: ChangeNotifierProvider.value(
         value: _userProvider,
         builder: (context, _) => FilterableList(
-          context.select<UserProvider, Future<List<User>>>(
+          list: context.select<UserProvider, Future<List<User>>>(
               (provider) => provider.getData()),
-          (element, filterText) =>
+          filterListByText: (element, filterText) =>
               (element as User).username.contains(filterText),
-          (user, context) => buildUserCard(user, context),
+          elementToWidget: (user, context) => buildUserCard(user, context),
         ),
       ),
       floatingActionButton: CreateFAB(

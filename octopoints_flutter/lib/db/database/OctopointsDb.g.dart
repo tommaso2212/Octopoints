@@ -90,7 +90,7 @@ class _$OctopointsDb extends OctopointsDb {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `matches` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `matches` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `archived` INTEGER NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `users` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `username` TEXT NOT NULL, `win` INTEGER NOT NULL, `lose` INTEGER NOT NULL)');
         await database.execute(
@@ -98,7 +98,9 @@ class _$OctopointsDb extends OctopointsDb {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `teamUserRelation` (`teamId` INTEGER NOT NULL, `userId` INTEGER NOT NULL, FOREIGN KEY (`teamId`) REFERENCES `teams` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, PRIMARY KEY (`teamId`, `userId`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `rules` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `matchId` INTEGER NOT NULL, `numVincitori` INTEGER NOT NULL, `total` INTEGER NOT NULL, `totalIncrement` INTEGER NOT NULL, `partialIncrement` INTEGER NOT NULL, FOREIGN KEY (`matchId`) REFERENCES `matches` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `rules` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `matchId` INTEGER NOT NULL, `winners` INTEGER NOT NULL, `total` INTEGER NOT NULL, FOREIGN KEY (`matchId`) REFERENCES `matches` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+        await database.execute(
+            'CREATE UNIQUE INDEX `index_rules_matchId` ON `rules` (`matchId`)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -139,20 +141,29 @@ class _$MatchDao extends MatchDao {
         _matchEntityInsertionAdapter = InsertionAdapter(
             database,
             'matches',
-            (MatchEntity item) =>
-                <String, Object?>{'id': item.id, 'name': item.name}),
+            (MatchEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'archived': item.archived ? 1 : 0
+                }),
         _matchEntityUpdateAdapter = UpdateAdapter(
             database,
             'matches',
             ['id'],
-            (MatchEntity item) =>
-                <String, Object?>{'id': item.id, 'name': item.name}),
+            (MatchEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'archived': item.archived ? 1 : 0
+                }),
         _matchEntityDeletionAdapter = DeletionAdapter(
             database,
             'matches',
             ['id'],
-            (MatchEntity item) =>
-                <String, Object?>{'id': item.id, 'name': item.name});
+            (MatchEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'archived': item.archived ? 1 : 0
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -167,10 +178,12 @@ class _$MatchDao extends MatchDao {
   final DeletionAdapter<MatchEntity> _matchEntityDeletionAdapter;
 
   @override
-  Future<List<MatchEntity>> getMatches() async {
-    return _queryAdapter.queryList('SELECT * FROM matches ORDER BY name',
-        mapper: (Map<String, Object?> row) =>
-            MatchEntity(row['id'] as int?, row['name'] as String));
+  Future<List<MatchEntity>> getMatches(bool archived) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM matches WHERE archived = ?1 ORDER BY name',
+        mapper: (Map<String, Object?> row) => MatchEntity(row['id'] as int?,
+            row['name'] as String, (row['archived'] as int) != 0),
+        arguments: [archived ? 1 : 0]);
   }
 
   @override
@@ -428,10 +441,8 @@ class _$RuleDao extends RuleDao {
             (RuleEntity item) => <String, Object?>{
                   'id': item.id,
                   'matchId': item.matchId,
-                  'numVincitori': item.numVincitori,
-                  'total': item.total,
-                  'totalIncrement': item.totalIncrement,
-                  'partialIncrement': item.partialIncrement ? 1 : 0
+                  'winners': item.winners,
+                  'total': item.total
                 }),
         _ruleEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -440,10 +451,8 @@ class _$RuleDao extends RuleDao {
             (RuleEntity item) => <String, Object?>{
                   'id': item.id,
                   'matchId': item.matchId,
-                  'numVincitori': item.numVincitori,
-                  'total': item.total,
-                  'totalIncrement': item.totalIncrement,
-                  'partialIncrement': item.partialIncrement ? 1 : 0
+                  'winners': item.winners,
+                  'total': item.total
                 }),
         _ruleEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -452,10 +461,8 @@ class _$RuleDao extends RuleDao {
             (RuleEntity item) => <String, Object?>{
                   'id': item.id,
                   'matchId': item.matchId,
-                  'numVincitori': item.numVincitori,
-                  'total': item.total,
-                  'totalIncrement': item.totalIncrement,
-                  'partialIncrement': item.partialIncrement ? 1 : 0
+                  'winners': item.winners,
+                  'total': item.total
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -471,15 +478,10 @@ class _$RuleDao extends RuleDao {
   final DeletionAdapter<RuleEntity> _ruleEntityDeletionAdapter;
 
   @override
-  Future<List<RuleEntity>> getRules(int id) async {
-    return _queryAdapter.queryList('SELECT * FROM rules WHERE matchId=?1',
-        mapper: (Map<String, Object?> row) => RuleEntity(
-            row['id'] as int?,
-            row['matchId'] as int,
-            row['numVincitori'] as int,
-            row['total'] as int,
-            row['totalIncrement'] as int,
-            (row['partialIncrement'] as int) != 0),
+  Future<RuleEntity?> getRule(int id) async {
+    return _queryAdapter.query('SELECT * FROM rules WHERE matchId=?1',
+        mapper: (Map<String, Object?> row) => RuleEntity(row['id'] as int?,
+            row['matchId'] as int, row['winners'] as int, row['total'] as int),
         arguments: [id]);
   }
 

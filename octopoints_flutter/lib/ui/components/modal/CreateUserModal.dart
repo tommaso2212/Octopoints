@@ -11,17 +11,11 @@ class CreateUserModal extends StatefulWidget {
 }
 
 class _CreateUserModalState extends State<CreateUserModal> {
-  final TextEditingController _controller = TextEditingController();
-  bool isValid = false;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  String username ="";
 
   void createUser(BuildContext context) {
     context.read<UserProvider>().createUser(
-          _controller.text,
+          username,
         );
     Navigator.pop(context);
   }
@@ -29,17 +23,17 @@ class _CreateUserModalState extends State<CreateUserModal> {
   @override
   Widget build(BuildContext context) {
     return CreateModal(
-      title: 'Nuova partita',
+      title: 'Create user',
       formInputs: [
         TextInputField(
-          controller: _controller,
-          label: 'Nome Partita',
-          onChanged: () => setState((){
-            isValid = _controller.text.isNotEmpty;
+          initialValue: username,
+          label: 'Username',
+          onChanged: (value) => setState((){
+            username = value;
           }),
         ),
       ],
-      isValid: isValid,
+      isValid: username.isNotEmpty,
       onConfirm: () => createUser(context),
     );
   }
