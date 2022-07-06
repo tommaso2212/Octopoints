@@ -1,5 +1,6 @@
 import 'package:octopoints_flutter/db/DbSingleton.dart';
 import 'package:octopoints_flutter/db/dao/MatchDao.dart';
+import 'package:octopoints_flutter/db/entity/MatchEntity.dart';
 import 'package:octopoints_flutter/service/mapper/MatchMapper.dart';
 import 'package:octopoints_flutter/service/service.dart';
 
@@ -19,9 +20,15 @@ class MatchServiceImpl implements MatchService {
 
   @override
   Future<List<Match>> getMatches({bool archived = false}) async {
-    return (await _matchDao.getMatches(archived))
-        .map((e) => e.toMatchModel())
-        .toList();
+    List<Match> matches = [];
+
+    for(MatchEntity entity in await _matchDao.getMatches(archived)){
+      Match match = entity.toMatchModel();
+      match.rule = await DBService.ruleService.getRuleByMatchId(match.id);
+      matches.add(match);
+    }
+
+    return matches;
   }
 
 }

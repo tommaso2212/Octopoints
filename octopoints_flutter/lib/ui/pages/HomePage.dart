@@ -34,12 +34,12 @@ class HomePage extends StatelessWidget {
         ),
       ),
       onDelete: (() => _matchProvider.deleteMatch(match)),
-      onLongPress: () => BaseModal.showModal(
+      onLongPress: match.rule != null ? () => BaseModal.showModal(
         context,
         RuleModal(
-          match: match,
+          rule: match.rule!,
         ),
-      ),
+      ): null,
     );
   }
 

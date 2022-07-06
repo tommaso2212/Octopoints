@@ -9,29 +9,30 @@ import 'package:octopoints_flutter/ui/providers/RuleProvider.dart';
 import 'package:provider/provider.dart';
 
 class RuleModal extends StatefulWidget {
-  final Match match;
-
-  const RuleModal({required this.match});
+  final Rule rule;
+  const RuleModal({required this.rule});
 
   @override
   State<RuleModal> createState() => _RuleModalState();
 }
 
 class _RuleModalState extends State<RuleModal> {
+  String totalPointsToWin = "";
+  String winners = "";
+
   Widget buildRuleCard(Rule rule, BuildContext context) {
-    print(rule.id);
     return RoundedCard(
       Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(
+          const Padding(
+            padding: EdgeInsets.only(
               bottom: 20,
             ),
             child: Text(
-              widget.match.name,
-              style: const TextStyle(
+              "Rule",
+              style: TextStyle(
                 fontSize: 24,
               ),
             ),
@@ -44,15 +45,13 @@ class _RuleModalState extends State<RuleModal> {
             child: TextInputField(
               initialValue: rule.total.toString(),
               autoFocus: false,
-              label: "Total points to win",
+              label: 'Total points to win',
               validateInput: (value) => value.isNotEmpty && value != "0",
               textInputType:
                   const TextInputType.numberWithOptions(signed: true),
-              onChanged: (value) => context.read<RuleProvider>().updateRule(
-                    rule.setTotal(
-                      int.parse(value),
-                    ),
-                  ),
+              onChanged: (value) => setState(() {
+                totalPointsToWin = value;
+              }),
             ),
           ),
           Padding(
@@ -67,17 +66,16 @@ class _RuleModalState extends State<RuleModal> {
               validateInput: (value) => value.isNotEmpty && value != "0",
               textInputType:
                   const TextInputType.numberWithOptions(signed: true),
-              onChanged: (value) => context.read<RuleProvider>().updateRule(
-                    rule.setWinners(
-                      int.parse(value),
-                    ),
-                  ),
+              onChanged: (value) => setState(() {
+                winners = value;
+              }),
             ),
           ),
           Padding(
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
+            child: ConfirmButton(() {}),
           ),
         ],
       ),
@@ -88,37 +86,8 @@ class _RuleModalState extends State<RuleModal> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => RuleProvider(widget.match),
-      builder: (context, _) => FutureBuilder(
-        future: context
-            .select<RuleProvider, Future<Rule?>>((provider) => provider.data),
-        builder: (context, AsyncSnapshot<Rule?> snap) {
-          if (snap.connectionState == ConnectionState.waiting) {
-            return OctopointsProgressIndicator();
-          } else if (snap.hasError) {
-            return Text("Error: " + snap.error.toString());
-          } else if (snap.hasData) {
-            return buildRuleCard(snap.data!, context);
-          }
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(bottom: 10),
-                child: Text(
-                  "Add new rule?",
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-              ConfirmButton(
-                () => context.read<RuleProvider>().createRule(),
-              ),
-            ],
-          );
-        },
-      ),
+      create: (context) => RuleProvider(widget.rule),
+      builder: (context, _) => buildRuleCard(context.select<RuleProvider, Rule>((value) => value.data), context),
     );
   }
 }
