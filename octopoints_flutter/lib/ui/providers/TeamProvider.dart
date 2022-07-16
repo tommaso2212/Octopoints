@@ -10,10 +10,9 @@ class TeamProvider extends OctopointsProvider<Team> {
   @override
   Future<List<Team>> getData() async {
     return DBService.teamService.getTeamsByMatchId(_match.id);
-    
   }
 
-  void createTeam(String name) async {
+  void createTeam() async {
     create(await DBService.teamService.createTeam(Team(matchId: _match.id)));
   }
 
@@ -26,11 +25,37 @@ class TeamProvider extends OctopointsProvider<Team> {
     await DBService.teamService.updateTeams([teamToUpdate]);
     (await data)[(await data)
         .indexWhere((Team team) => team.id == teamToUpdate.id)] = teamToUpdate;
+    notifyListeners();
+  }
+
+  void sortListByTotal() async {
     (await data).sort(((a, b) => -a.total.compareTo(b.total)));
     notifyListeners();
   }
 
-  void endGame(){
+  void applyRule(Team team) {
+    if (_match.rule != null && _match.rule!.total >= team.total) {
+      team.status = TeamStatusEnum.win;
+    }
+  }
 
+  void endGame() {
+    if (_match.rule != null &&
+        _match.rule!.winners >=
+            _match.teams.map((e) => e.status == TeamStatusEnum.win).length) {
+      _match.teams.forEach((element) {
+        if (element.status == TeamStatusEnum.win) {
+          DBService.userService.updateUsers(element.users.map((e) {
+            e.addWin();
+            return e;
+          }).toList());
+        } else {
+          DBService.userService.updateUsers(element.users.map((e) {
+            e.addLose();
+            return e;
+          }).toList());
+        }
+      });
+    }
   }
 }

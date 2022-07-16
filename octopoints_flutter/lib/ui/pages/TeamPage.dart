@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/service/service.dart';
+import 'package:octopoints_flutter/ui/components/CreateFAB.dart';
 import 'package:octopoints_flutter/ui/components/FilterableList.dart';
 import 'package:octopoints_flutter/ui/components/RoundedCard.dart';
+import 'package:octopoints_flutter/ui/components/TextInputField.dart';
 import 'package:octopoints_flutter/ui/components/modal/BaseModal.dart';
 import 'package:octopoints_flutter/ui/components/modal/TeamPointsModal.dart';
 import 'package:octopoints_flutter/ui/pages/TeammatesPage.dart';
@@ -22,34 +24,52 @@ class TeamPage extends StatelessWidget {
       Container(
         margin: const EdgeInsets.only(right: 40),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 const Text(
                   "Total: ",
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                  style: TextStyle(fontSize: 20, color: Colors.grey),
                 ),
-                Text(
-                  team.total.toString(),
-                  style: const TextStyle(
-                    fontSize: 22,
+                RoundedCard(
+                  Text(
+                    team.total.toString(),
+                    style: const TextStyle(fontSize: 24, color: Colors.grey),
                   ),
-                ),
-                const SizedBox(
-                  width: 30,
-                ),
-                const Text(
-                  "Partial: ",
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-                Text(
-                  team.partial.toString(),
-                  style: const TextStyle(
-                    fontSize: 18,
-                  ),
+                  backgroundColor: OctopointsTheme.darkGrey,
                 ),
               ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                const Text(
+                  "Partial: ",
+                  style: TextStyle(fontSize: 18, color: Colors.grey),
+                ),
+                RoundedCard(
+                  Text(
+                    team.partial.toString(),
+                    style: const TextStyle(fontSize: 18, color: Colors.grey),
+                  ),
+                  backgroundColor: OctopointsTheme.darkGrey,
+                ),
+              ],
+            ),
+            Wrap(
+              spacing: 8,
+              children: team.users
+                  .map(
+                    (e) => Chip(
+                      label: Text(
+                        e.username,
+                      ),
+                      backgroundColor: Colors.grey,
+                    ),
+                  )
+                  .toList(),
             ),
           ],
         ),
@@ -86,6 +106,15 @@ class TeamPage extends StatelessWidget {
         title: Text(
           _match.name,
         ),
+        actions: [
+          ChangeNotifierProvider.value(
+            value: _teamProvider,
+            builder: (context, _) => IconButton(
+              onPressed: () => context.read<TeamProvider>().sortListByTotal(),
+              icon: const Icon(Icons.bar_chart_rounded),
+            ),
+          ),
+        ],
       ),
       body: ChangeNotifierProvider.value(
         value: _teamProvider,
@@ -93,6 +122,12 @@ class TeamPage extends StatelessWidget {
           list: context.select<TeamProvider, Future<List<Team>>>(
               (provider) => provider.data),
           elementToWidget: (team, context) => buildTeamCard(team, context),
+        ),
+      ),
+      floatingActionButton: ChangeNotifierProvider.value(
+        value: _teamProvider,
+        builder: (context, _) => CreateFAB(
+          onPressed: () => context.read<TeamProvider>().createTeam(),
         ),
       ),
     );

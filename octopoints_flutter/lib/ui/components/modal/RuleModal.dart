@@ -9,8 +9,8 @@ import 'package:octopoints_flutter/ui/providers/RuleProvider.dart';
 import 'package:provider/provider.dart';
 
 class RuleModal extends StatefulWidget {
-  final Rule rule;
-  const RuleModal({required this.rule});
+  final Match match;
+  const RuleModal({required this.match});
 
   @override
   State<RuleModal> createState() => _RuleModalState();
@@ -19,6 +19,13 @@ class RuleModal extends StatefulWidget {
 class _RuleModalState extends State<RuleModal> {
   String totalPointsToWin = "";
   String winners = "";
+
+  @override
+  void initState() {
+    totalPointsToWin = widget.match.rule!.total.toString();
+    winners = widget.match.rule!.winners.toString();
+    super.initState();
+  }
 
   Widget buildRuleCard(Rule rule, BuildContext context) {
     return RoundedCard(
@@ -43,7 +50,7 @@ class _RuleModalState extends State<RuleModal> {
               horizontal: 50,
             ),
             child: TextInputField(
-              initialValue: rule.total.toString(),
+              initialValue: totalPointsToWin,
               autoFocus: false,
               label: 'Total points to win',
               validateInput: (value) => value.isNotEmpty && value != "0",
@@ -60,7 +67,7 @@ class _RuleModalState extends State<RuleModal> {
               horizontal: 50,
             ),
             child: TextInputField(
-              initialValue: rule.winners.toString(),
+              initialValue: winners,
               autoFocus: false,
               label: "Number of winners",
               validateInput: (value) => value.isNotEmpty && value != "0",
@@ -75,19 +82,35 @@ class _RuleModalState extends State<RuleModal> {
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
-            child: ConfirmButton(() {}),
+            child: ConfirmButton(totalPointsToWin.isNotEmpty &&
+                    totalPointsToWin != "0" &&
+                    winners.isNotEmpty &&
+                    winners != "0"
+                ? () => context
+                    .read<RuleProvider>()
+                    .updateRule(
+                      rule
+                          .setTotal(int.parse(totalPointsToWin))
+                          .setWinners(int.parse(winners)),
+                    )
+                    .then((value) => Navigator.pop(context))
+                : null),
           ),
         ],
       ),
-      onDelete: () => context.read<RuleProvider>().deleteRule(rule),
+      onDelete: () {
+        context.read<RuleProvider>().deleteRule(rule);
+        Navigator.pop(context);
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => RuleProvider(widget.rule),
-      builder: (context, _) => buildRuleCard(context.select<RuleProvider, Rule>((value) => value.data), context),
+      create: (context) => RuleProvider(widget.match),
+      builder: (context, _) => buildRuleCard(
+          context.select<RuleProvider, Rule>((value) => value.data), context),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/service/model/Match.dart';
+import 'package:octopoints_flutter/ui/components/ConfirmDialog.dart';
 import 'package:octopoints_flutter/ui/components/CreateFAB.dart';
 import 'package:octopoints_flutter/ui/components/FilterableList.dart';
 import 'package:octopoints_flutter/ui/components/RoundedCard.dart';
@@ -13,6 +14,15 @@ import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   final MatchProvider _matchProvider = MatchProvider();
+
+  void showMatchRule(BuildContext context, Match match) {
+    BaseModal.showModal(
+      context,
+      RuleModal(
+        match: match,
+      ),
+    ).then((_) => context.read<MatchProvider>().notifyListeners());
+  }
 
   Widget buildMatchCard(Match match, BuildContext context) {
     return RoundedCard(
@@ -34,12 +44,15 @@ class HomePage extends StatelessWidget {
         ),
       ),
       onDelete: (() => _matchProvider.deleteMatch(match)),
-      onLongPress: match.rule != null ? () => BaseModal.showModal(
-        context,
-        RuleModal(
-          rule: match.rule!,
-        ),
-      ): null,
+      onLongPress: match.rule != null
+          ? () => showMatchRule(context, match)
+          : () => ConfirmDialog.show(context, "Create new rule?").then(
+              (value) => value!
+                  ? context
+                      .read<MatchProvider>()
+                      .createMatchRule(match)
+                      .then((value) => showMatchRule(context, match))
+                  : null),
     );
   }
 

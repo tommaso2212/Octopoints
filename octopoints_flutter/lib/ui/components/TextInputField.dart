@@ -8,15 +8,16 @@ class TextInputField extends StatefulWidget {
   final TextInputType textInputType;
   final bool autoFocus;
   late bool Function(String)? validateInput;
+  TextEditingController? controller;
 
-  TextInputField({
-    required this.initialValue,
-    required this.label,
-    required this.onChanged,
-    this.textInputType = TextInputType.text,
-    this.autoFocus = true,
-    this.validateInput,
-  }) {
+  TextInputField(
+      {required this.initialValue,
+      required this.label,
+      required this.onChanged,
+      this.textInputType = TextInputType.text,
+      this.autoFocus = true,
+      this.validateInput,
+      this.controller}) {
     validateInput ??= (value) => value.isNotEmpty;
   }
 
@@ -25,12 +26,12 @@ class TextInputField extends StatefulWidget {
 }
 
 class _TextInputFieldState extends State<TextInputField> {
-  TextEditingController controller = TextEditingController();
   late bool isValid;
 
   @override
   void initState() {
-    controller.text = widget.initialValue;
+    widget.controller ??= TextEditingController();
+    widget.controller!.text = widget.initialValue;
     isValid = widget.validateInput!(widget.initialValue);
     super.initState();
   }
@@ -38,6 +39,7 @@ class _TextInputFieldState extends State<TextInputField> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       textAlign: TextAlign.center,
       style: const TextStyle(
         color: Colors.white,
