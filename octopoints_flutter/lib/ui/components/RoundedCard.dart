@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:octopoints_flutter/ui/theme/OctopointsTheme.dart';
+import 'package:octopoints_flutter/ui/theme/octopoints_theme.dart';
 
-import 'ConfirmDialog.dart';
+import '../common_widget/confirm_dialog.dart';
 
 class RoundedCard extends StatelessWidget {
   final Widget child;
@@ -39,7 +39,7 @@ class RoundedCard extends StatelessWidget {
                   textDirection: TextDirection.ltr,
                   child: GestureDetector(
                     onTap: () =>
-                        ConfirmDialog.show(context, 'Delete?').then(
+                        ConfirmDialog.show(context: context, title: 'Delete?').then(
                       (value) => value! ? onDelete!() : null,
                     ),
                     child: const Icon(

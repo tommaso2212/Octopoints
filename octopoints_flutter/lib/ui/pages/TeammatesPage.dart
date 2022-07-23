@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/service/service.dart';
-import 'package:octopoints_flutter/ui/components/CreateFAB.dart';
-import 'package:octopoints_flutter/ui/components/OctopointsProgressIndicator.dart';
+import 'package:octopoints_flutter/ui/common_widget/create_floating_action_button.dart';
+import 'package:octopoints_flutter/ui/common_widget/octopoints_progress_indicator.dart';
 import 'package:octopoints_flutter/ui/components/RoundedCard.dart';
 import 'package:octopoints_flutter/ui/components/modal/AddTeammatesModal.dart';
 import 'package:octopoints_flutter/ui/components/modal/BaseModal.dart';
@@ -25,6 +25,7 @@ class TeammatesPage extends StatelessWidget {
         return true;
       },
       child: Scaffold(
+        appBar: AppBar(),
         body: ChangeNotifierProvider.value(
           value: _teammatesProvider,
           builder: (context, _) => FutureBuilder(
@@ -58,7 +59,7 @@ class TeammatesPage extends StatelessWidget {
             },
           ),
         ),
-        floatingActionButton: CreateFAB(
+        floatingActionButton: CreateFloatingActionButton(
         onPressed: () => BaseModal.showModal(
           context,
           ChangeNotifierProvider.value(

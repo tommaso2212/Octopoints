@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/service/service.dart';
-import 'package:octopoints_flutter/ui/components/CreateFAB.dart';
+import 'package:octopoints_flutter/ui/common_widget/create_floating_action_button.dart';
 import 'package:octopoints_flutter/ui/components/FilterableList.dart';
 import 'package:octopoints_flutter/ui/components/RoundedCard.dart';
 import 'package:octopoints_flutter/ui/components/modal/BaseModal.dart';
@@ -77,7 +77,7 @@ class UserPage extends StatelessWidget {
           elementToWidget: (user, context) => buildUserCard(user, context),
         ),
       ),
-      floatingActionButton: CreateFAB(
+      floatingActionButton: CreateFloatingActionButton(
         onPressed: () => BaseModal.showModal(
           context,
           ChangeNotifierProvider.value(

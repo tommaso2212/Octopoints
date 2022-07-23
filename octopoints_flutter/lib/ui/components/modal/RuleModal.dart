@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:octopoints_flutter/service/model/Rule.dart';
+import 'package:octopoints_flutter/service/model/rule.dart';
 import 'package:octopoints_flutter/service/service.dart';
-import 'package:octopoints_flutter/ui/components/ConfirmButton.dart';
-import 'package:octopoints_flutter/ui/components/OctopointsProgressIndicator.dart';
+import 'package:octopoints_flutter/ui/common_widget/confirm_button.dart';
+import 'package:octopoints_flutter/ui/common_widget/octopoints_progress_indicator.dart';
 import 'package:octopoints_flutter/ui/components/RoundedCard.dart';
 import 'package:octopoints_flutter/ui/components/TextInputField.dart';
 import 'package:octopoints_flutter/ui/providers/RuleProvider.dart';
@@ -82,7 +82,7 @@ class _RuleModalState extends State<RuleModal> {
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
-            child: ConfirmButton(totalPointsToWin.isNotEmpty &&
+            child: ConfirmButton(onPressed: totalPointsToWin.isNotEmpty &&
                     totalPointsToWin != "0" &&
                     winners.isNotEmpty &&
                     winners != "0"

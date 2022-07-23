@@ -1,6 +1,6 @@
-import 'package:octopoints_flutter/service/model/Rule.dart';
+import 'package:octopoints_flutter/service/model/rule.dart';
 import 'package:octopoints_flutter/service/service.dart';
-import 'package:octopoints_flutter/ui/providers/OctopointsProvider.dart';
+import 'package:octopoints_flutter/ui/providers/octopoints_provider.dart';
 
 class TeamProvider extends OctopointsProvider<Team> {
   final Match _match;
@@ -9,20 +9,20 @@ class TeamProvider extends OctopointsProvider<Team> {
 
   @override
   Future<List<Team>> getData() async {
-    return DBService.teamService.getTeamsByMatchId(_match.id);
+    return OctopointsService.teamService.getTeamsByMatchId(_match.id);
   }
 
   void createTeam() async {
-    create(await DBService.teamService.createTeam(Team(matchId: _match.id)));
+    create(await OctopointsService.teamService.createTeam(Team(matchId: _match.id)));
   }
 
   void deleteTeam(Team team) async {
-    await DBService.teamService.deleteTeam(team);
+    await OctopointsService.teamService.deleteTeam(team);
     delete(team);
   }
 
   void updateTeam(Team teamToUpdate) async {
-    await DBService.teamService.updateTeams([teamToUpdate]);
+    await OctopointsService.teamService.updateTeams([teamToUpdate]);
     (await data)[(await data)
         .indexWhere((Team team) => team.id == teamToUpdate.id)] = teamToUpdate;
     notifyListeners();
@@ -45,12 +45,12 @@ class TeamProvider extends OctopointsProvider<Team> {
             _match.teams.map((e) => e.status == TeamStatusEnum.win).length) {
       _match.teams.forEach((element) {
         if (element.status == TeamStatusEnum.win) {
-          DBService.userService.updateUsers(element.users.map((e) {
+          OctopointsService.userService.updateUsers(element.users.map((e) {
             e.addWin();
             return e;
           }).toList());
         } else {
-          DBService.userService.updateUsers(element.users.map((e) {
+          OctopointsService.userService.updateUsers(element.users.map((e) {
             e.addLose();
             return e;
           }).toList());

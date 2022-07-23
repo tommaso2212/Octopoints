@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/ui/components/TextInputField.dart';
-import 'package:octopoints_flutter/ui/theme/OctopointsTheme.dart';
+import 'package:octopoints_flutter/ui/theme/octopoints_theme.dart';
 
 class PointsInputField extends StatefulWidget {
   final String initialValue;

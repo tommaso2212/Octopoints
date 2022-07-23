@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../ConfirmButton.dart';
+import '../../common_widget/confirm_button.dart';
 
 
 class CreateModal extends StatelessWidget {
@@ -33,7 +33,7 @@ class CreateModal extends StatelessWidget {
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
           child: ConfirmButton(
-            !isValid ? null : () => onConfirm(),
+            onPressed: !isValid ? null : () => onConfirm(),
           ),
         ),
       ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/service/service.dart';
-import 'package:octopoints_flutter/ui/components/CreateFAB.dart';
+import 'package:octopoints_flutter/ui/common_widget/create_floating_action_button.dart';
 import 'package:octopoints_flutter/ui/components/FilterableList.dart';
 import 'package:octopoints_flutter/ui/components/RoundedCard.dart';
 import 'package:octopoints_flutter/ui/components/TextInputField.dart';
@@ -8,7 +8,7 @@ import 'package:octopoints_flutter/ui/components/modal/BaseModal.dart';
 import 'package:octopoints_flutter/ui/components/modal/TeamPointsModal.dart';
 import 'package:octopoints_flutter/ui/pages/TeammatesPage.dart';
 import 'package:octopoints_flutter/ui/providers/TeamProvider.dart';
-import 'package:octopoints_flutter/ui/theme/OctopointsTheme.dart';
+import 'package:octopoints_flutter/ui/theme/octopoints_theme.dart';
 import 'package:provider/provider.dart';
 
 class TeamPage extends StatelessWidget {
@@ -126,7 +126,7 @@ class TeamPage extends StatelessWidget {
       ),
       floatingActionButton: ChangeNotifierProvider.value(
         value: _teamProvider,
-        builder: (context, _) => CreateFAB(
+        builder: (context, _) => CreateFloatingActionButton(
           onPressed: () => context.read<TeamProvider>().createTeam(),
         ),
       ),

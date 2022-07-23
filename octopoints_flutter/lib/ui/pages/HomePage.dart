@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:octopoints_flutter/service/model/Match.dart';
-import 'package:octopoints_flutter/ui/components/ConfirmDialog.dart';
-import 'package:octopoints_flutter/ui/components/CreateFAB.dart';
+import 'package:octopoints_flutter/service/model/match.dart';
+import 'package:octopoints_flutter/ui/common_widget/confirm_dialog.dart';
+import 'package:octopoints_flutter/ui/common_widget/create_floating_action_button.dart';
 import 'package:octopoints_flutter/ui/components/FilterableList.dart';
 import 'package:octopoints_flutter/ui/components/RoundedCard.dart';
 import 'package:octopoints_flutter/ui/components/modal/BaseModal.dart';
@@ -46,7 +46,7 @@ class HomePage extends StatelessWidget {
       onDelete: (() => _matchProvider.deleteMatch(match)),
       onLongPress: match.rule != null
           ? () => showMatchRule(context, match)
-          : () => ConfirmDialog.show(context, "Create new rule?").then(
+          : () => ConfirmDialog.show(context: context, title: "Create new rule?").then(
               (value) => value!
                   ? context
                       .read<MatchProvider>()
@@ -88,7 +88,7 @@ class HomePage extends StatelessWidget {
           elementToWidget: (match, context) => buildMatchCard(match, context),
         ),
       ),
-      floatingActionButton: CreateFAB(
+      floatingActionButton: CreateFloatingActionButton(
         onPressed: () => BaseModal.showModal(
           context,
           ChangeNotifierProvider.value(

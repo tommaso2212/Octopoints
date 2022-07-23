@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:octopoints_flutter/ui/components/OctopointsProgressIndicator.dart';
+import 'package:octopoints_flutter/ui/common_widget/octopoints_progress_indicator.dart';
 import 'package:octopoints_flutter/ui/components/TextInputField.dart';
 
 class FilterableList extends StatefulWidget {

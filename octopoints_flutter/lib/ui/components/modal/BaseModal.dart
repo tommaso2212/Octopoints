@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/OctopointsTheme.dart';
+import '../../theme/octopoints_theme.dart';
 
 class BaseModal extends StatelessWidget {
   static Future<void> showModal(BuildContext context, Widget child,

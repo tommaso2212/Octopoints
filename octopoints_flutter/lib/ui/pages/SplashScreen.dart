@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:octopoints_flutter/db/DbSingleton.dart';
-import 'package:octopoints_flutter/ui/components/OctopointsProgressIndicator.dart';
+import 'package:octopoints_flutter/db/db_singleton.dart';
+import 'package:octopoints_flutter/ui/common_widget/octopoints_progress_indicator.dart';
 
 class SplashScreen extends StatefulWidget {
 

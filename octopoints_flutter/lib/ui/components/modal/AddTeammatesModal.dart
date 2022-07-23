@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/service/service.dart';
-import 'package:octopoints_flutter/ui/components/ConfirmButton.dart';
+import 'package:octopoints_flutter/ui/common_widget/confirm_button.dart';
+import 'package:octopoints_flutter/ui/components/FilterableList.dart';
 import 'package:octopoints_flutter/ui/components/RoundedCard.dart';
 import 'package:octopoints_flutter/ui/pages/TeammatesPage.dart';
 import 'package:octopoints_flutter/ui/providers/TeammatesProvider.dart';
-import 'package:octopoints_flutter/ui/theme/OctopointsTheme.dart';
+import 'package:octopoints_flutter/ui/theme/octopoints_theme.dart';
 import 'package:provider/provider.dart';
 
 class AddTeammatesModal extends StatefulWidget {
@@ -23,7 +24,7 @@ class _AddTeammatesModalState extends State<AddTeammatesModal> {
   @override
   void initState() {
     super.initState();
-    DBService.teamService
+    OctopointsService.teamService
         .getAvailableTeammates(widget._team)
         .then((value) => setState(() {
           users = value;
@@ -54,6 +55,8 @@ class _AddTeammatesModalState extends State<AddTeammatesModal> {
             ),
           ),
         ),
+        
+
         users.isNotEmpty ? SingleChildScrollView(
           child: SizedBox(
             height: 200,
@@ -101,7 +104,7 @@ class _AddTeammatesModalState extends State<AddTeammatesModal> {
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
           child: ConfirmButton(
-            () => onConfirm(context),
+            onPressed: () => onConfirm(context),
           ),
         ),
       ],

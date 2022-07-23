@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:octopoints_flutter/service/model/Team.dart';
+import 'package:octopoints_flutter/service/model/team.dart';
 import 'package:octopoints_flutter/service/service.dart';
 import 'package:octopoints_flutter/ui/components/PointsInputField.dart';
 import 'package:octopoints_flutter/ui/components/RoundedCard.dart';
 import 'package:octopoints_flutter/ui/components/TextInputField.dart';
 import 'package:octopoints_flutter/ui/providers/TeamProvider.dart';
-import 'package:octopoints_flutter/ui/theme/OctopointsTheme.dart';
+import 'package:octopoints_flutter/ui/theme/octopoints_theme.dart';
 import 'package:provider/provider.dart';
 
 class TeamPointsModal extends StatefulWidget {
