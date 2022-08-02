@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
-import '../../common_widget/confirm_button.dart';
-
+import '../common_widget/confirm_button.dart';
 
 class CreateModal extends StatelessWidget {
-  
   final String title;
   final List<Widget> formInputs;
   final bool isValid;
   final Function onConfirm;
 
-  const CreateModal({required this.title, required this.formInputs, required this.isValid, required this.onConfirm});
+  const CreateModal({
+    Key? key,
+    required this.title,
+    required this.formInputs,
+    required this.isValid,
+    required this.onConfirm,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

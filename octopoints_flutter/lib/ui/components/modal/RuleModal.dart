@@ -3,8 +3,8 @@ import 'package:octopoints_flutter/service/model/rule.dart';
 import 'package:octopoints_flutter/service/service.dart';
 import 'package:octopoints_flutter/ui/common_widget/confirm_button.dart';
 import 'package:octopoints_flutter/ui/common_widget/octopoints_progress_indicator.dart';
-import 'package:octopoints_flutter/ui/components/RoundedCard.dart';
-import 'package:octopoints_flutter/ui/components/TextInputField.dart';
+import 'package:octopoints_flutter/ui/common_widget/rounded_card.dart';
+import 'package:octopoints_flutter/ui/common_widget/text_input_field.dart';
 import 'package:octopoints_flutter/ui/providers/RuleProvider.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +29,7 @@ class _RuleModalState extends State<RuleModal> {
 
   Widget buildRuleCard(Rule rule, BuildContext context) {
     return RoundedCard(
-      Column(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -82,19 +82,20 @@ class _RuleModalState extends State<RuleModal> {
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
-            child: ConfirmButton(onPressed: totalPointsToWin.isNotEmpty &&
-                    totalPointsToWin != "0" &&
-                    winners.isNotEmpty &&
-                    winners != "0"
-                ? () => context
-                    .read<RuleProvider>()
-                    .updateRule(
-                      rule
-                          .setTotal(int.parse(totalPointsToWin))
-                          .setWinners(int.parse(winners)),
-                    )
-                    .then((value) => Navigator.pop(context))
-                : null),
+            child: ConfirmButton(
+                onPressed: totalPointsToWin.isNotEmpty &&
+                        totalPointsToWin != "0" &&
+                        winners.isNotEmpty &&
+                        winners != "0"
+                    ? () => context
+                        .read<RuleProvider>()
+                        .updateRule(
+                          rule
+                              .setTotal(int.parse(totalPointsToWin))
+                              .setWinners(int.parse(winners)),
+                        )
+                        .then((value) => Navigator.pop(context))
+                    : null),
           ),
         ],
       ),

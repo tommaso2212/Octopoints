@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:octopoints_flutter/ui/components/TextInputField.dart';
-import 'package:octopoints_flutter/ui/components/modal/CreateModal.dart';
-import 'package:octopoints_flutter/ui/providers/MatchProvider.dart';
+import 'package:octopoints_flutter/ui/common_widget/text_input_field.dart';
+import 'package:octopoints_flutter/ui/modal/create_modal.dart';
+import 'package:octopoints_flutter/ui/providers/match_provider.dart';
 import 'package:provider/provider.dart';
 
 class CreateMatchModal extends StatefulWidget {
@@ -13,9 +13,7 @@ class _CreateMatchModalState extends State<CreateMatchModal> {
   String matchName = "";
 
   void createMatch(BuildContext context) {
-    context.read<MatchProvider>().createMatch(
-          matchName
-        );
+    context.read<MatchProvider>().createMatch(matchName);
     Navigator.pop(context);
   }
 
@@ -27,7 +25,7 @@ class _CreateMatchModalState extends State<CreateMatchModal> {
         TextInputField(
           initialValue: matchName,
           label: 'Nome Partita',
-          onChanged: (value) => setState((){
+          onChanged: (value) => setState(() {
             matchName = value;
           }),
         ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/service/service.dart';
 import 'package:octopoints_flutter/ui/common_widget/create_floating_action_button.dart';
+import 'package:octopoints_flutter/ui/common_widget/rounded_card.dart';
 import 'package:octopoints_flutter/ui/components/FilterableList.dart';
-import 'package:octopoints_flutter/ui/components/RoundedCard.dart';
-import 'package:octopoints_flutter/ui/components/modal/BaseModal.dart';
+import 'package:octopoints_flutter/ui/modal/base_modal.dart';
 import 'package:octopoints_flutter/ui/components/modal/CreateUserModal.dart';
 import 'package:octopoints_flutter/ui/providers/UserProvider.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +13,7 @@ class UserPage extends StatelessWidget {
 
   Widget buildUserCard(User user, BuildContext context) {
     return RoundedCard(
-      Container(
+      child: Container(
         margin: const EdgeInsets.only(right: 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

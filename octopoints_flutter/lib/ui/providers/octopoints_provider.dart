@@ -1,19 +1,34 @@
 import 'package:flutter/material.dart';
 
 abstract class OctopointsProvider<T> extends ChangeNotifier {
-  T? _data;
+  final List<T> _listData = [];
+  final GlobalKey<AnimatedListState> listKey = GlobalKey();
+  bool _alreadyInit = false;
 
-  Future<List<T>> getData() => Future.value([]);
+  Future<List<T>> getData();
 
-  Future<List<T>> get data => _data != null ? Future.value(_data) : getData().then((value) => _data=value);
-
-  void create(T item) async {
-    (await data).add(item);
-    notifyListeners();
+  List<T> get data {
+    if (!_alreadyInit) {
+      _setData();
+    }
+    return _listData;
   }
 
-  void delete(T item) async {
-    (await data).remove(item);
-    notifyListeners();
+  void _setData() async {
+    _alreadyInit = true;
+    for (T item in await getData()) {
+      addItem(item);
+    }
+  }
+
+  void addItem(T item) {
+    _listData.add(item);
+    listKey.currentState!.insertItem(_listData.length - 1);
+  }
+
+  void removeItem(T item) {
+    listKey.currentState!.removeItem(_listData.indexOf(item),
+        (context, animation) => SizeTransition(sizeFactor: animation));
+    _listData.remove(item);
   }
 }

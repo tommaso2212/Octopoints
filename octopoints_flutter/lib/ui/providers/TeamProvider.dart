@@ -13,12 +13,13 @@ class TeamProvider extends OctopointsProvider<Team> {
   }
 
   void createTeam() async {
-    create(await OctopointsService.teamService.createTeam(Team(matchId: _match.id)));
+    addItem(await OctopointsService.teamService
+        .createTeam(Team(matchId: _match.id)));
   }
 
   void deleteTeam(Team team) async {
     await OctopointsService.teamService.deleteTeam(team);
-    delete(team);
+    removeItem(team);
   }
 
   void updateTeam(Team teamToUpdate) async {

@@ -3,17 +3,19 @@ import 'package:octopoints_flutter/db/db_singleton.dart';
 import 'package:octopoints_flutter/ui/common_widget/octopoints_progress_indicator.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
     super.initState();
-    DbSingleton().initDb().then((value) => Navigator.pushReplacementNamed(context, 'home'));
+    DbSingleton()
+        .initDb()
+        .then((value) => Navigator.pushReplacementNamed(context, 'home'));
   }
 
   @override
@@ -22,8 +24,8 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Padding(
+          children: const [
+            Padding(
               padding: EdgeInsets.all(8),
               child: Text(
                 'Octopoints',

@@ -19,6 +19,6 @@ class TeammatesProvider extends OctopointsProvider<User> {
 
   void leaveTeam(User user) async {
     await OctopointsService.teamService.removeTeammates(_team.id, user.id);
-    delete(user);
+    removeItem(user);
   }
 }

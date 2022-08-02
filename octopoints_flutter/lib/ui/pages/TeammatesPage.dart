@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/service/service.dart';
 import 'package:octopoints_flutter/ui/common_widget/create_floating_action_button.dart';
 import 'package:octopoints_flutter/ui/common_widget/octopoints_progress_indicator.dart';
-import 'package:octopoints_flutter/ui/components/RoundedCard.dart';
+import 'package:octopoints_flutter/ui/common_widget/rounded_card.dart';
 import 'package:octopoints_flutter/ui/components/modal/AddTeammatesModal.dart';
-import 'package:octopoints_flutter/ui/components/modal/BaseModal.dart';
+import 'package:octopoints_flutter/ui/modal/base_modal.dart';
 import 'package:octopoints_flutter/ui/providers/TeammatesProvider.dart';
 import 'package:provider/provider.dart';
 
@@ -20,8 +20,7 @@ class TeammatesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pop<Future<List<User>>>(
-            context, _teammatesProvider.data);
+        Navigator.pop<List<User>>(context, _teammatesProvider.data);
         return true;
       },
       child: Scaffold(
@@ -30,7 +29,7 @@ class TeammatesPage extends StatelessWidget {
           value: _teammatesProvider,
           builder: (context, _) => FutureBuilder(
             future: context.select<TeammatesProvider, Future<List<User>>>(
-                (provider) => provider.data),
+                (provider) => Future.value(provider.data)),
             initialData: const <User>[],
             builder: (context, AsyncSnapshot<List<User>> snap) {
               if (snap.connectionState == ConnectionState.waiting) {
@@ -43,7 +42,7 @@ class TeammatesPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     User user = snap.data![index];
                     return RoundedCard(
-                      Text(
+                      child: Text(
                         user.username,
                         overflow: TextOverflow.clip,
                         style: const TextStyle(
@@ -51,7 +50,8 @@ class TeammatesPage extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      onDelete: () => context.read<TeammatesProvider>().leaveTeam(user),
+                      onDelete: () =>
+                          context.read<TeammatesProvider>().leaveTeam(user),
                     );
                   },
                 );
@@ -60,14 +60,14 @@ class TeammatesPage extends StatelessWidget {
           ),
         ),
         floatingActionButton: CreateFloatingActionButton(
-        onPressed: () => BaseModal.showModal(
-          context,
-          ChangeNotifierProvider.value(
-            value: _teammatesProvider,
-            child: AddTeammatesModal(_team),
+          onPressed: () => BaseModal.showModal(
+            context,
+            ChangeNotifierProvider.value(
+              value: _teammatesProvider,
+              child: AddTeammatesModal(_team),
+            ),
           ),
         ),
-      ),
       ),
     );
   }

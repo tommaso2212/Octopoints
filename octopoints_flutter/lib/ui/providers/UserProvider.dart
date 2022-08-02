@@ -8,11 +8,12 @@ class UserProvider extends OctopointsProvider<User> {
   }
 
   void createUser(String username) async {
-    create(await OctopointsService.userService.createUser(User(username: username)));
+    addItem(await OctopointsService.userService
+        .createUser(User(username: username)));
   }
 
   void deleteUser(User user) async {
     await OctopointsService.userService.deleteUser(user);
-    delete(user);
+    removeItem(user);
   }
 }

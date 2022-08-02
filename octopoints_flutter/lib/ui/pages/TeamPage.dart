@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/service/service.dart';
 import 'package:octopoints_flutter/ui/common_widget/create_floating_action_button.dart';
 import 'package:octopoints_flutter/ui/components/FilterableList.dart';
-import 'package:octopoints_flutter/ui/components/RoundedCard.dart';
-import 'package:octopoints_flutter/ui/components/TextInputField.dart';
-import 'package:octopoints_flutter/ui/components/modal/BaseModal.dart';
+import 'package:octopoints_flutter/ui/common_widget/rounded_card.dart';
+import 'package:octopoints_flutter/ui/common_widget/text_input_field.dart';
+import 'package:octopoints_flutter/ui/modal/base_modal.dart';
 import 'package:octopoints_flutter/ui/components/modal/TeamPointsModal.dart';
 import 'package:octopoints_flutter/ui/pages/TeammatesPage.dart';
 import 'package:octopoints_flutter/ui/providers/TeamProvider.dart';
@@ -21,7 +21,7 @@ class TeamPage extends StatelessWidget {
 
   Widget buildTeamCard(Team team, BuildContext context) {
     return RoundedCard(
-      Container(
+      child: Container(
         margin: const EdgeInsets.only(right: 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,7 +34,7 @@ class TeamPage extends StatelessWidget {
                   style: TextStyle(fontSize: 20, color: Colors.grey),
                 ),
                 RoundedCard(
-                  Text(
+                  child: Text(
                     team.total.toString(),
                     style: const TextStyle(fontSize: 24, color: Colors.grey),
                   ),
@@ -50,7 +50,7 @@ class TeamPage extends StatelessWidget {
                   style: TextStyle(fontSize: 18, color: Colors.grey),
                 ),
                 RoundedCard(
-                  Text(
+                  child: Text(
                     team.partial.toString(),
                     style: const TextStyle(fontSize: 18, color: Colors.grey),
                   ),
@@ -120,7 +120,7 @@ class TeamPage extends StatelessWidget {
         value: _teamProvider,
         builder: (context, _) => FilterableList(
           list: context.select<TeamProvider, Future<List<Team>>>(
-              (provider) => provider.data),
+              (provider) => Future.value(provider.data)),
           elementToWidget: (team, context) => buildTeamCard(team, context),
         ),
       ),

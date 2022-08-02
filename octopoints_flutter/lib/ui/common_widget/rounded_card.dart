@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:octopoints_flutter/ui/common_widget/confirm_dialog.dart';
 import 'package:octopoints_flutter/ui/theme/octopoints_theme.dart';
-
-import '../common_widget/confirm_dialog.dart';
 
 class RoundedCard extends StatelessWidget {
   final Widget child;
@@ -10,13 +9,14 @@ class RoundedCard extends StatelessWidget {
   final void Function()? onLongPress;
   final Color backgroundColor;
 
-  const RoundedCard(
-    this.child, {
+  const RoundedCard({
+    Key? key,
+    required this.child,
     this.onDelete,
     this.onTap,
     this.onLongPress,
     this.backgroundColor = OctopointsTheme.lightGrey,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,20 +35,20 @@ class RoundedCard extends StatelessWidget {
             child,
             onDelete != null
                 ? Positioned.directional(
-                  end: 0,
-                  textDirection: TextDirection.ltr,
-                  child: GestureDetector(
-                    onTap: () =>
-                        ConfirmDialog.show(context: context, title: 'Delete?').then(
-                      (value) => value! ? onDelete!() : null,
+                    end: 0,
+                    textDirection: TextDirection.ltr,
+                    child: GestureDetector(
+                      onTap: () => ConfirmDialog.show(
+                        context: context,
+                        title: 'Delete?',
+                        onConfirm: onDelete,
+                      ),
+                      child: const Icon(
+                        Icons.delete,
+                        color: OctopointsTheme.primaryColor,
+                      ),
                     ),
-                    child: const Icon(
-                      Icons.delete,
-                      color: OctopointsTheme.primaryColor,
-                
-                    ),
-                  ),
-                )
+                  )
                 : const SizedBox.shrink(),
           ],
         ),

@@ -11,13 +11,15 @@ class TextInputField extends StatefulWidget {
   TextEditingController? controller;
 
   TextInputField(
-      {required this.initialValue,
+      {Key? key,
+      required this.initialValue,
       required this.label,
       required this.onChanged,
       this.textInputType = TextInputType.text,
       this.autoFocus = true,
       this.validateInput,
-      this.controller}) {
+      this.controller})
+      : super(key: key) {
     validateInput ??= (value) => value.isNotEmpty;
   }
 

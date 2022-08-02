@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:octopoints_flutter/ui/pages/HomePage.dart';
-import 'package:octopoints_flutter/ui/pages/SplashScreen.dart';
+import 'package:octopoints_flutter/ui/pages/home_page.dart';
+import 'package:octopoints_flutter/ui/pages/splashscreen.dart';
 import 'package:octopoints_flutter/ui/theme/octopoints_theme.dart';
 
 void main() {

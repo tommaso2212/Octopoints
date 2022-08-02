@@ -1,20 +1,24 @@
-import 'package:octopoints_flutter/service/model/rule.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:octopoints_flutter/service/service.dart';
 import 'package:octopoints_flutter/ui/providers/octopoints_provider.dart';
 
 class MatchProvider extends OctopointsProvider<Match> {
   @override
-  Future<List<Match>> getData() {
-    return OctopointsService.matchService.getMatches();
+  Future<List<Match>> getData() async {
+    List<Match> matches = await OctopointsService.matchService.getMatches();
+    return matches;
   }
 
   void createMatch(String name) async {
-    create(await OctopointsService.matchService.createMatch(Match(name: name)));
+    Match match =
+        await OctopointsService.matchService.createMatch(Match(name: name));
+    addItem(match);
   }
 
-  void deleteMatch(Match match) async {
-    await OctopointsService.matchService.deleteMatch(match);
-    delete(match);
+  @override
+  void removeItem(Match item) async {
+    await OctopointsService.matchService.deleteMatch(item);
+    super.removeItem(item);
   }
 
   Future createMatchRule(Match match) async {

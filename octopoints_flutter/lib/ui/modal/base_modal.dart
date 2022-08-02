@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/octopoints_theme.dart';
+import '../theme/octopoints_theme.dart';
 
 class BaseModal extends StatelessWidget {
   static Future<void> showModal(BuildContext context, Widget child,
@@ -28,7 +28,7 @@ class BaseModal extends StatelessWidget {
     return Container(
       padding: padding,
       child: child,
-      margin: EdgeInsets.only(bottom: 20),
+      margin: const EdgeInsets.only(bottom: 20),
     );
   }
 }
