@@ -3,29 +3,16 @@ import 'package:octopoints_flutter/service/service.dart';
 import 'package:octopoints_flutter/ui/common_widget/confirm_button.dart';
 import 'package:octopoints_flutter/ui/common_widget/rounded_card.dart';
 import 'package:octopoints_flutter/ui/common_widget/text_input_field.dart';
-import 'package:octopoints_flutter/ui/providers/RuleProvider.dart';
+import 'package:octopoints_flutter/ui/providers/match_provider.dart';
 import 'package:provider/provider.dart';
 
-class RuleModal extends StatefulWidget {
+class RuleCard extends StatelessWidget {
   final Match match;
-  const RuleModal({required this.match});
+
+  const RuleCard({Key? key, required this.match}) : super(key: key);
 
   @override
-  State<RuleModal> createState() => _RuleModalState();
-}
-
-class _RuleModalState extends State<RuleModal> {
-  String totalPointsToWin = "";
-  String winners = "";
-
-  @override
-  void initState() {
-    totalPointsToWin = widget.match.rule!.total.toString();
-    winners = widget.match.rule!.winners.toString();
-    super.initState();
-  }
-
-  Widget buildRuleCard(Rule rule, BuildContext context) {
+  Widget build(BuildContext context) {
     return RoundedCard(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -36,7 +23,7 @@ class _RuleModalState extends State<RuleModal> {
               bottom: 20,
             ),
             child: Text(
-              widget.match.name,
+              match.name,
               style: const TextStyle(
                 fontSize: 24,
               ),
@@ -48,15 +35,13 @@ class _RuleModalState extends State<RuleModal> {
               horizontal: 50,
             ),
             child: TextInputField(
-              initialValue: totalPointsToWin,
+              initialValue: match.rule!.total.toString(),
               autoFocus: false,
               label: 'Total points to win',
               validateInput: (value) => value.isNotEmpty && value != "0",
               textInputType:
                   const TextInputType.numberWithOptions(signed: true),
-              onChanged: (value) => setState(() {
-                totalPointsToWin = value;
-              }),
+              onChanged: (value) => match.rule!.total = int.parse(value),
             ),
           ),
           Padding(
@@ -65,15 +50,13 @@ class _RuleModalState extends State<RuleModal> {
               horizontal: 50,
             ),
             child: TextInputField(
-              initialValue: winners,
+              initialValue: match.rule!.winners.toString(),
               autoFocus: false,
               label: "Number of winners",
               validateInput: (value) => value.isNotEmpty && value != "0",
               textInputType:
                   const TextInputType.numberWithOptions(signed: true),
-              onChanged: (value) => setState(() {
-                winners = value;
-              }),
+              onChanged: (value) => match.rule!.winners = int.parse(value),
             ),
           ),
           Padding(
@@ -81,35 +64,22 @@ class _RuleModalState extends State<RuleModal> {
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
             child: ConfirmButton(
-                onPressed: totalPointsToWin.isNotEmpty &&
-                        totalPointsToWin != "0" &&
-                        winners.isNotEmpty &&
-                        winners != "0"
-                    ? () => context
-                        .read<RuleProvider>()
-                        .updateRule(
-                          rule
-                              .setTotal(int.parse(totalPointsToWin))
-                              .setWinners(int.parse(winners)),
-                        )
-                        .then((value) => Navigator.pop(context))
+                onPressed: match.rule!.total.toString().isNotEmpty &&
+                        match.rule!.total.toString() != "0" &&
+                        match.rule!.winners.toString().isNotEmpty &&
+                        match.rule!.winners.toString() != "0"
+                    ? () =>
+                        context.read<MatchProvider>().updateRule(match).then(
+                              (_) => Navigator.pop(context),
+                            )
                     : null),
           ),
         ],
       ),
       onDelete: () {
-        context.read<RuleProvider>().deleteRule(rule);
+        context.read<MatchProvider>().deleteRule(match);
         Navigator.pop(context);
       },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => RuleProvider(widget.match),
-      builder: (context, _) => buildRuleCard(
-          context.select<RuleProvider, Rule>((value) => value.data), context),
     );
   }
 }

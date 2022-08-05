@@ -14,15 +14,6 @@ class HomePage extends StatelessWidget {
 
   HomePage({Key? key}) : super(key: key);
 
-  // void showMatchRule(BuildContext context, Match match) {
-  //   BaseModal.showModal(
-  //     context,
-  //     RuleModal(
-  //       match: match,
-  //     ),
-  //   ).then((_) => context.read<MatchProvider>().notifyListeners());
-  // }
-
   Widget buildMatch(BuildContext context, int index, String textFilter) {
     Match match = context
         .select<MatchProvider, Match>((provider) => provider.data[index]);

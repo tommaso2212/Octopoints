@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:octopoints_flutter/service/service.dart';
 import 'package:octopoints_flutter/ui/providers/octopoints_provider.dart';
 
@@ -25,6 +24,17 @@ class MatchProvider extends OctopointsProvider<Match> {
     Rule rule = await OctopointsService.ruleService
         .createRule(Rule(matchId: match.id, winners: 1, total: 3));
     match.rule = rule;
-    //notifyListeners();
+    updateItem(match);
+  }
+
+  Future updateRule(Match match) async {
+    await OctopointsService.ruleService.updateRule(match.rule!);
+    updateItem(match);
+  }
+
+  void deleteRule(Match match) async {
+    await OctopointsService.ruleService.deleteRule(match.rule!);
+    match.rule = null;
+    updateItem(match);
   }
 }

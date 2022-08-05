@@ -26,6 +26,11 @@ abstract class OctopointsProvider<T> extends ChangeNotifier {
     listKey.currentState!.insertItem(_listData.length - 1);
   }
 
+  void updateItem(T item){
+    _listData[_listData.indexOf(item)] = item;
+    notifyListeners();
+  }
+
   void removeItem(T item) {
     listKey.currentState!.removeItem(_listData.indexOf(item),
         (context, animation) => SizeTransition(sizeFactor: animation));

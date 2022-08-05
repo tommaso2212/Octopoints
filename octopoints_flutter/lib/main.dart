@@ -11,7 +11,7 @@ void main() {
       theme: OctopointsTheme.themeData,
       initialRoute: 'init',
       routes: {
-        'init': (context) => SplashScreen(),
+        'init': (context) => const SplashScreen(),
         'home': (context) => HomePage(),
       },
     ),
