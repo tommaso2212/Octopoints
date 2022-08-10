@@ -1,6 +1,6 @@
 import 'package:octopoints_flutter/service/service.dart';
 
-class Match {
+class Match{
   final int id;
   final String name;
   bool archived;

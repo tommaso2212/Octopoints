@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/ui/common_widget/text_input_field.dart';
 import 'package:octopoints_flutter/ui/modal/create_modal.dart';
-import 'package:octopoints_flutter/ui/providers/UserProvider.dart';
+import 'package:octopoints_flutter/ui/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class CreateUserModal extends StatefulWidget {

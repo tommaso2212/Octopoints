@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
 
   HomePage({Key? key}) : super(key: key);
 
-  Widget buildMatch(BuildContext context, int index, String textFilter) {
+  Widget buildListItem(BuildContext context, int index, String textFilter) {
     Match match = context
         .select<MatchProvider, Match>((provider) => provider.data[index]);
     if (match.name.contains(textFilter)) {
@@ -50,13 +50,8 @@ class HomePage extends StatelessWidget {
         value: _matchProvider,
         builder: (context, _) => FilterableList(
           listKey: context.read<MatchProvider>().listKey,
-          itemCount: context
-              .select<MatchProvider, int>((provider) => provider.data.length),
-          itemBuilderFiltered: (context, index, textFilter) => buildMatch(
-            context,
-            index,
-            textFilter,
-          ),
+          itemBuilder: (context, index, textFilter) =>
+              buildListItem(context, index, textFilter),
         ),
       ),
       floatingActionButton: CreateFloatingActionButton(
@@ -64,7 +59,7 @@ class HomePage extends StatelessWidget {
           context,
           ChangeNotifierProvider.value(
             value: _matchProvider,
-            child: CreateMatchModal(),
+            child: const CreateMatchModal(),
           ),
         ),
       ),

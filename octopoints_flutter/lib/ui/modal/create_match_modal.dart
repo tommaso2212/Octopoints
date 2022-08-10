@@ -5,6 +5,8 @@ import 'package:octopoints_flutter/ui/providers/match_provider.dart';
 import 'package:provider/provider.dart';
 
 class CreateMatchModal extends StatefulWidget {
+  const CreateMatchModal({Key? key}) : super(key: key);
+
   @override
   _CreateMatchModalState createState() => _CreateMatchModalState();
 }

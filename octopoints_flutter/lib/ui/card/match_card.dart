@@ -8,18 +8,23 @@ import 'package:octopoints_flutter/service/service.dart';
 import 'package:octopoints_flutter/ui/common_widget/rounded_card.dart';
 import 'package:octopoints_flutter/ui/pages/TeamPage.dart';
 
-class MatchCard extends StatelessWidget {
+class MatchCard extends StatefulWidget {
   final Match match;
 
   const MatchCard({Key? key, required this.match}) : super(key: key);
 
+  @override
+  State<MatchCard> createState() => _MatchCardState();
+}
+
+class _MatchCardState extends State<MatchCard> {
   void showRuleModal(BuildContext context) {
     BaseModal.showModal(
       context,
       ChangeNotifierProvider.value(
         value: context.read<MatchProvider>(),
         child: RuleCard(
-          match: match,
+          match: widget.match,
         ),
       ),
     );
@@ -30,7 +35,10 @@ class MatchCard extends StatelessWidget {
       context: context,
       title: "Create new rule?",
       onConfirm: () async {
-        await context.read<MatchProvider>().createMatchRule(match);
+        Rule rule = await context.read<MatchProvider>().createMatchRule(widget.match);
+        setState(() {
+          widget.match.rule = rule;
+        });
         showRuleModal(context);
       },
     );
@@ -42,7 +50,7 @@ class MatchCard extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.only(right: 40),
           child: Text(
-            match.name,
+            widget.match.name,
             overflow: TextOverflow.clip,
             style: const TextStyle(
               fontSize: 24,
@@ -53,11 +61,11 @@ class MatchCard extends StatelessWidget {
         onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => TeamPage(match),
+                builder: (context) => TeamPage(widget.match),
               ),
             ),
-        onDelete: () => context.read<MatchProvider>().removeItem(match),
-        onLongPress: match.rule != null
+        onDelete: () => context.read<MatchProvider>().removeItem(widget.match),
+        onLongPress: widget.match.rule != null
             ? () => showRuleModal(context)
             : () => showCreateRuleDialog(context));
   }

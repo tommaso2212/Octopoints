@@ -20,11 +20,9 @@ class MatchProvider extends OctopointsProvider<Match> {
     super.removeItem(item);
   }
 
-  Future createMatchRule(Match match) async {
-    Rule rule = await OctopointsService.ruleService
+  Future<Rule> createMatchRule(Match match) async {
+    return await OctopointsService.ruleService
         .createRule(Rule(matchId: match.id, winners: 1, total: 3));
-    match.rule = rule;
-    updateItem(match);
   }
 
   Future updateRule(Match match) async {

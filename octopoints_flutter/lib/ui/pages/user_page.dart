@@ -1,62 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/service/service.dart';
+import 'package:octopoints_flutter/ui/card/user_card.dart';
 import 'package:octopoints_flutter/ui/common_widget/create_floating_action_button.dart';
-import 'package:octopoints_flutter/ui/common_widget/rounded_card.dart';
-import 'package:octopoints_flutter/ui/components/FilterableList.dart';
+import 'package:octopoints_flutter/ui/common_widget/filterable_list.dart';
 import 'package:octopoints_flutter/ui/modal/base_modal.dart';
 import 'package:octopoints_flutter/ui/components/modal/CreateUserModal.dart';
-import 'package:octopoints_flutter/ui/providers/UserProvider.dart';
+import 'package:octopoints_flutter/ui/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class UserPage extends StatelessWidget {
   final UserProvider _userProvider = UserProvider();
 
-  Widget buildUserCard(User user, BuildContext context) {
-    return RoundedCard(
-      child: Container(
-        margin: const EdgeInsets.only(right: 40),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              user.username,
-              overflow: TextOverflow.clip,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Row(
-              children: [
-                const Icon(
-                  Icons.keyboard_arrow_up,
-                  size: 32,
-                  color: Colors.white,
-                ),
-                Text(
-                  user.win.toString(),
-                  style: const TextStyle(
-                    fontSize: 22,
-                  ),
-                ),
-                const Icon(
-                  Icons.keyboard_arrow_down,
-                  size: 32,
-                  color: Colors.white,
-                ),
-                Text(
-                  user.lose.toString(),
-                  style: const TextStyle(
-                    fontSize: 22,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-      onDelete: (() => _userProvider.deleteUser(user)),
-    );
+  UserPage({Key? key}) : super(key: key);
+
+  Widget buildListItem(BuildContext context, int index, String textFilter) {
+    User user =
+        context.select<UserProvider, User>((provider) => provider.data[index]);
+    if (user.username.contains(textFilter)) {
+      return UserCard(user: user);
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 
   @override
@@ -70,11 +34,9 @@ class UserPage extends StatelessWidget {
       body: ChangeNotifierProvider.value(
         value: _userProvider,
         builder: (context, _) => FilterableList(
-          list: context.select<UserProvider, Future<List<User>>>(
-              (provider) => provider.getData()),
-          filterListByText: (element, filterText) =>
-              (element as User).username.contains(filterText),
-          elementToWidget: (user, context) => buildUserCard(user, context),
+          listKey: context.read<UserProvider>().listKey,
+          itemBuilder: (context, index, textFilter) =>
+              buildListItem(context, index, textFilter),
         ),
       ),
       floatingActionButton: CreateFloatingActionButton(

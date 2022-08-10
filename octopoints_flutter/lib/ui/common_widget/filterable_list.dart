@@ -1,22 +1,21 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/ui/common_widget/text_input_field.dart';
 
 class FilterableList extends StatefulWidget {
-  final Widget Function(BuildContext, int, String) itemBuilderFiltered;
-  final int itemCount;
+  final Widget Function(BuildContext context, int index, String textFilter) itemBuilder;
   final GlobalKey<AnimatedListState> listKey;
-  const FilterableList(
-      {Key? key,
-      required this.listKey,
-      required this.itemBuilderFiltered,
-      required this.itemCount})
-      : super(key: key);
+  const FilterableList({
+    Key? key,
+    required this.itemBuilder,
+    required this.listKey,
+  }) : super(key: key);
 
   @override
   State<FilterableList> createState() => _FilterableListState();
 }
 
 class _FilterableListState extends State<FilterableList> {
+
   String textFilter = "";
 
   @override
@@ -39,9 +38,10 @@ class _FilterableListState extends State<FilterableList> {
           child: AnimatedList(
             key: widget.listKey,
             itemBuilder: (context, index, animation) => Builder(
-              builder: (context) =>
-                  widget.itemBuilderFiltered(context, index, textFilter),
-            ),
+              builder: (context) {
+                return widget.itemBuilder(context, index, textFilter);
+              }
+            )
           ),
         ),
       ],
