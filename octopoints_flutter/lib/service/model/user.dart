@@ -1,5 +1,4 @@
-
-class User{
+class User {
   final int id;
   final String username;
   int _win;
@@ -16,11 +15,13 @@ class User{
   get win => _win;
   get lose => _lose;
 
-  void addWin() {
+  User addWin() {
     _win++;
+    return this;
   }
 
-  void addLose() {
+  User addLose() {
     _lose++;
+    return this;
   }
 }

@@ -22,11 +22,11 @@ class _CreateMatchModalState extends State<CreateMatchModal> {
   @override
   Widget build(BuildContext context) {
     return CreateModal(
-      title: 'Nuova partita',
+      title: 'Create new match',
       formInputs: [
         TextInputField(
           initialValue: matchName,
-          label: 'Nome Partita',
+          label: 'Match name',
           onChanged: (value) => setState(() {
             matchName = value;
           }),

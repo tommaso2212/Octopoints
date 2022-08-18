@@ -50,6 +50,8 @@ class HomePage extends StatelessWidget {
         value: _matchProvider,
         builder: (context, _) => FilterableList(
           listKey: context.read<MatchProvider>().listKey,
+          initialItemCount: context
+              .select<MatchProvider, int>((provider) => provider.data.length),
           itemBuilder: (context, index, textFilter) =>
               buildListItem(context, index, textFilter),
         ),

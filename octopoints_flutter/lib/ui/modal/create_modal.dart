@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../common_widget/confirm_button.dart';
+import 'package:octopoints_flutter/ui/common_widget/confirm_button.dart';
 
 class CreateModal extends StatelessWidget {
   final String title;
@@ -22,7 +22,7 @@ class CreateModal extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 14),
+          padding: const EdgeInsets.only(bottom: 20),
           child: Text(
             title,
             style: const TextStyle(
@@ -34,6 +34,7 @@ class CreateModal extends StatelessWidget {
         ...formInputs,
         Padding(
           padding: EdgeInsets.only(
+            top: 10,
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
           child: ConfirmButton(

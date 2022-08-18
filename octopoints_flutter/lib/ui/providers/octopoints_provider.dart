@@ -26,7 +26,7 @@ abstract class OctopointsProvider<T> extends ChangeNotifier {
     listKey.currentState!.insertItem(_listData.length - 1);
   }
 
-  void updateItem(T item){
+  void updateItem(T item) {
     _listData[_listData.indexOf(item)] = item;
     notifyListeners();
   }
@@ -35,5 +35,15 @@ abstract class OctopointsProvider<T> extends ChangeNotifier {
     listKey.currentState!.removeItem(_listData.indexOf(item),
         (context, animation) => SizeTransition(sizeFactor: animation));
     _listData.remove(item);
+  }
+
+  void forceUpdateListData() {
+    while (_listData.isNotEmpty) {
+      listKey.currentState!.removeItem(
+          0, (context, animation) => SizeTransition(sizeFactor: animation));
+      _listData.removeAt(0);
+    }
+    _alreadyInit = false;
+    notifyListeners();
   }
 }

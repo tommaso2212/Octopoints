@@ -9,4 +9,7 @@ abstract class TeamUserRelationDao extends IDao<TeamUserRelationEntity> {
 
   @insert
   Future<List<int>> addTeammates(List<TeamUserRelationEntity> list);
+
+  @Query('DELETE FROM teamUserRelation WHERE teamId=:teamId')
+  Future<void> deleteTeammates(int teamId);
 }

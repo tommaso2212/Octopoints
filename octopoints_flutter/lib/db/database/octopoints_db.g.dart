@@ -90,7 +90,7 @@ class _$OctopointsDb extends OctopointsDb {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `matches` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `archived` INTEGER NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `matches` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `users` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `username` TEXT NOT NULL, `win` INTEGER NOT NULL, `lose` INTEGER NOT NULL)');
         await database.execute(
@@ -141,29 +141,20 @@ class _$MatchDao extends MatchDao {
         _matchEntityInsertionAdapter = InsertionAdapter(
             database,
             'matches',
-            (MatchEntity item) => <String, Object?>{
-                  'id': item.id,
-                  'name': item.name,
-                  'archived': item.archived ? 1 : 0
-                }),
+            (MatchEntity item) =>
+                <String, Object?>{'id': item.id, 'name': item.name}),
         _matchEntityUpdateAdapter = UpdateAdapter(
             database,
             'matches',
             ['id'],
-            (MatchEntity item) => <String, Object?>{
-                  'id': item.id,
-                  'name': item.name,
-                  'archived': item.archived ? 1 : 0
-                }),
+            (MatchEntity item) =>
+                <String, Object?>{'id': item.id, 'name': item.name}),
         _matchEntityDeletionAdapter = DeletionAdapter(
             database,
             'matches',
             ['id'],
-            (MatchEntity item) => <String, Object?>{
-                  'id': item.id,
-                  'name': item.name,
-                  'archived': item.archived ? 1 : 0
-                });
+            (MatchEntity item) =>
+                <String, Object?>{'id': item.id, 'name': item.name});
 
   final sqflite.DatabaseExecutor database;
 
@@ -178,12 +169,10 @@ class _$MatchDao extends MatchDao {
   final DeletionAdapter<MatchEntity> _matchEntityDeletionAdapter;
 
   @override
-  Future<List<MatchEntity>> getMatches(bool archived) async {
-    return _queryAdapter.queryList(
-        'SELECT * FROM matches WHERE archived = ?1 ORDER BY name',
-        mapper: (Map<String, Object?> row) => MatchEntity(row['id'] as int?,
-            row['name'] as String, (row['archived'] as int) != 0),
-        arguments: [archived ? 1 : 0]);
+  Future<List<MatchEntity>> getMatches() async {
+    return _queryAdapter.queryList('SELECT * FROM matches ORDER BY name',
+        mapper: (Map<String, Object?> row) =>
+            MatchEntity(row['id'] as int?, row['name'] as String));
   }
 
   @override
@@ -333,7 +322,7 @@ class _$TeamDao extends TeamDao {
   @override
   Future<List<TeamEntity>> getTeamsByMatchId(int id) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM teams WHERE matchId=?1 ORDER BY total DESC',
+        'SELECT * FROM teams WHERE matchId=?1 ORDER By total DESC',
         mapper: (Map<String, Object?> row) => TeamEntity(
             row['id'] as int?,
             row['matchId'] as int,
@@ -408,6 +397,13 @@ class _$TeamUserRelationDao extends TeamUserRelationDao {
     return _queryAdapter.queryList(
         'SELECT U.* FROM users U, teamUserRelation J WHERE J.teamId=?1 AND J.userId=U.id',
         mapper: (Map<String, Object?> row) => UserEntity(row['id'] as int?, row['username'] as String, row['win'] as int, row['lose'] as int),
+        arguments: [teamId]);
+  }
+
+  @override
+  Future<void> deleteTeammates(int teamId) async {
+    await _queryAdapter.queryNoReturn(
+        'DELETE FROM teamUserRelation WHERE teamId=?1',
         arguments: [teamId]);
   }
 

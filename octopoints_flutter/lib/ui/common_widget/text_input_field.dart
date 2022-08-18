@@ -4,7 +4,7 @@ import 'package:octopoints_flutter/ui/theme/octopoints_theme.dart';
 class TextInputField extends StatefulWidget {
   final String initialValue;
   final String label;
-  final Function(String) onChanged;
+  final void Function(String) onChanged;
   final TextInputType textInputType;
   final bool autoFocus;
   late bool Function(String)? validateInput;
@@ -39,6 +39,14 @@ class _TextInputFieldState extends State<TextInputField> {
   }
 
   @override
+  void didUpdateWidget(covariant TextInputField oldWidget) {
+    if (widget.validateInput != null && widget.controller != null) {
+      isValid = widget.validateInput!(widget.controller!.text);
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TextField(
       controller: widget.controller,
@@ -69,6 +77,8 @@ class _TextInputFieldState extends State<TextInputField> {
           borderRadius: BorderRadius.circular(7),
           borderSide: const BorderSide(color: OctopointsTheme.lightGrey),
         ),
+        filled: true,
+        fillColor: OctopointsTheme.darkGrey,
       ),
     );
   }

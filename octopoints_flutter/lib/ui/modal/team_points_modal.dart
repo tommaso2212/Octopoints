@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/service/model/team.dart';
 import 'package:octopoints_flutter/service/service.dart';
-import 'package:octopoints_flutter/ui/components/PointsInputField.dart';
-import 'package:octopoints_flutter/ui/common_widget/rounded_card.dart';
-import 'package:octopoints_flutter/ui/common_widget/text_input_field.dart';
-import 'package:octopoints_flutter/ui/providers/TeamProvider.dart';
-import 'package:octopoints_flutter/ui/theme/octopoints_theme.dart';
+import 'package:octopoints_flutter/ui/common_widget/number_input_field.dart';
+import 'package:octopoints_flutter/ui/providers/team_provider.dart';
 import 'package:provider/provider.dart';
 
 class TeamPointsModal extends StatefulWidget {
-  Team team;
+  final Team team;
 
-  TeamPointsModal(this.team);
+  const TeamPointsModal({Key? key, required this.team}) : super(key: key);
 
   @override
   State<TeamPointsModal> createState() => _TeamPointsModalState();
@@ -24,7 +21,7 @@ class _TeamPointsModalState extends State<TeamPointsModal> {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        PointsInputField(
+        NumberInputField(
             initialValue: widget.team.total.toString(),
             label: 'Total',
             onChanged: (value) {
@@ -33,7 +30,7 @@ class _TeamPointsModalState extends State<TeamPointsModal> {
                 context.read<TeamProvider>().updateTeam(widget.team);
               }
             }),
-        PointsInputField(
+        NumberInputField(
           initialValue: widget.team.partial.toString(),
           label: 'Partial',
           onChanged: (value) {

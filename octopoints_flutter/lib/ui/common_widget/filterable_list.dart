@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/ui/common_widget/text_input_field.dart';
 
 class FilterableList extends StatefulWidget {
-  final Widget Function(BuildContext context, int index, String textFilter) itemBuilder;
+  final Widget Function(BuildContext context, int index, String textFilter)
+      itemBuilder;
   final GlobalKey<AnimatedListState> listKey;
+  final int initialItemCount;
   const FilterableList({
     Key? key,
     required this.itemBuilder,
     required this.listKey,
+    required this.initialItemCount,
   }) : super(key: key);
 
   @override
@@ -15,7 +18,6 @@ class FilterableList extends StatefulWidget {
 }
 
 class _FilterableListState extends State<FilterableList> {
-
   String textFilter = "";
 
   @override
@@ -37,11 +39,11 @@ class _FilterableListState extends State<FilterableList> {
         Expanded(
           child: AnimatedList(
             key: widget.listKey,
+            initialItemCount: widget.initialItemCount,
             itemBuilder: (context, index, animation) => Builder(
-              builder: (context) {
-                return widget.itemBuilder(context, index, textFilter);
-              }
-            )
+              builder: (context) =>
+                  widget.itemBuilder(context, index, textFilter),
+            ),
           ),
         ),
       ],

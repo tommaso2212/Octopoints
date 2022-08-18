@@ -4,7 +4,7 @@ import 'package:octopoints_flutter/ui/card/user_card.dart';
 import 'package:octopoints_flutter/ui/common_widget/create_floating_action_button.dart';
 import 'package:octopoints_flutter/ui/common_widget/filterable_list.dart';
 import 'package:octopoints_flutter/ui/modal/base_modal.dart';
-import 'package:octopoints_flutter/ui/components/modal/CreateUserModal.dart';
+import 'package:octopoints_flutter/ui/modal/create_user_modal.dart';
 import 'package:octopoints_flutter/ui/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -35,6 +35,8 @@ class UserPage extends StatelessWidget {
         value: _userProvider,
         builder: (context, _) => FilterableList(
           listKey: context.read<UserProvider>().listKey,
+          initialItemCount: context
+              .select<UserProvider, int>((provider) => provider.data.length),
           itemBuilder: (context, index, textFilter) =>
               buildListItem(context, index, textFilter),
         ),
@@ -44,7 +46,7 @@ class UserPage extends StatelessWidget {
           context,
           ChangeNotifierProvider.value(
             value: _userProvider,
-            child: CreateUserModal(),
+            child: const CreateUserModal(),
           ),
         ),
       ),

@@ -5,6 +5,8 @@ import 'package:octopoints_flutter/ui/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class CreateUserModal extends StatefulWidget {
+  const CreateUserModal({Key? key}) : super(key: key);
+
   @override
   State<CreateUserModal> createState() => _CreateUserModalState();
 }

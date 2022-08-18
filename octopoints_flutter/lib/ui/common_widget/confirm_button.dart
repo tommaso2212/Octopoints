@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/ui/theme/octopoints_theme.dart';
 
 class ConfirmButton extends StatelessWidget {
-  final Function()? onPressed;
+  final void Function()? onPressed;
 
   const ConfirmButton({Key? key, this.onPressed}) : super(key: key);
 

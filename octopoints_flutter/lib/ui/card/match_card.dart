@@ -6,7 +6,7 @@ import 'package:octopoints_flutter/ui/providers/match_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:octopoints_flutter/service/service.dart';
 import 'package:octopoints_flutter/ui/common_widget/rounded_card.dart';
-import 'package:octopoints_flutter/ui/pages/TeamPage.dart';
+import 'package:octopoints_flutter/ui/pages/team_page.dart';
 
 class MatchCard extends StatefulWidget {
   final Match match;
@@ -35,7 +35,8 @@ class _MatchCardState extends State<MatchCard> {
       context: context,
       title: "Create new rule?",
       onConfirm: () async {
-        Rule rule = await context.read<MatchProvider>().createMatchRule(widget.match);
+        Rule rule =
+            await context.read<MatchProvider>().createMatchRule(widget.match);
         setState(() {
           widget.match.rule = rule;
         });
@@ -61,7 +62,7 @@ class _MatchCardState extends State<MatchCard> {
         onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => TeamPage(widget.match),
+                builder: (context) => TeamPage(match: widget.match),
               ),
             ),
         onDelete: () => context.read<MatchProvider>().removeItem(widget.match),
