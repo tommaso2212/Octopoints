@@ -37,6 +37,17 @@ class TeamCard extends StatelessWidget {
     }
   }
 
+  Color getBackgroundColorByStatus() {
+    switch (team.status) {
+      case TeamStatusEnum.playing:
+        return OctopointsTheme.lightGrey;
+      case TeamStatusEnum.win:
+        return const Color(0xff334B48);
+      case TeamStatusEnum.lose:
+        return const Color(0xff442B37);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return RoundedCard(
@@ -77,11 +88,7 @@ class TeamCard extends StatelessWidget {
           ],
         ),
       ),
-      backgroundColor: team.status == TeamStatusEnum.win
-          ? const Color(0xff334B48)
-          : team.status == TeamStatusEnum.lose
-              ? const Color(0xff442B37)
-              : OctopointsTheme.lightGrey,
+      backgroundColor: getBackgroundColorByStatus(),
       onDelete: (() => context.read<TeamProvider>().deleteTeam(team)),
       onLongPress: () => BaseModal.showModal(
         context,

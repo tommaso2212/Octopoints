@@ -41,6 +41,10 @@ class TeamProvider extends OctopointsProvider<Team> {
   }
 
   void updateTeamStatusByRule(Team team) {
+    if (_match.rule != null) {
+      if (team.total >= _match.rule!.total) {}
+      if (_match.rule!.battleRoyale) {}
+    }
     if (_match.rule != null && team.total >= _match.rule!.total) {
       team.status = TeamStatusEnum.win;
     } else {
@@ -49,7 +53,13 @@ class TeamProvider extends OctopointsProvider<Team> {
   }
 
   List<Team> _getWinners() {
-    return data.where((team) => TeamStatusEnum.win == team.status).toList();
+    bool Function(Team team) test;
+    if (_match.rule != null && _match.rule!.battleRoyale) {
+      test = (team) => TeamStatusEnum.playing == team.status;
+    } else {
+      test = (team) => TeamStatusEnum.win == team.status;
+    }
+    return data.where(test).toList();
   }
 
   List<User> getWinningUsers() {
@@ -61,7 +71,14 @@ class TeamProvider extends OctopointsProvider<Team> {
   }
 
   bool endMatch() {
-    return _match.rule != null && _getWinners().length >= _match.rule!.winners;
+    if (_match.rule != null) {
+      if (_match.rule!.battleRoyale) {
+        return _getWinners().length <= _match.rule!.winners;
+      } else {
+        return _getWinners().length >= _match.rule!.winners;
+      }
+    }
+    return false;
   }
 
   void updateUsers() async {

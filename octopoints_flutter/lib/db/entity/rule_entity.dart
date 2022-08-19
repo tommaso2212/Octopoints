@@ -8,18 +8,22 @@ import 'package:octopoints_flutter/db/database.dart';
     entity: MatchEntity,
     onDelete: ForeignKeyAction.cascade,
   )
-], indices: [Index(value: ["matchId"], unique: true)])
+], indices: [
+  Index(value: ["matchId"], unique: true)
+])
 class RuleEntity {
   @PrimaryKey(autoGenerate: true)
   final int? id;
   final int matchId;
   final int winners;
   final int total;
+  final bool battleRoyale;
 
   RuleEntity(
     this.id,
     this.matchId,
     this.winners,
     this.total,
+    this.battleRoyale,
   );
 }

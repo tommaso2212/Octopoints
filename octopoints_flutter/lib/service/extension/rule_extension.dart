@@ -8,6 +8,7 @@ extension RuleModelExtension on Rule {
       matchId,
       winners,
       total,
+      battleRoyale,
     );
   }
 
@@ -17,17 +18,21 @@ extension RuleModelExtension on Rule {
       matchId: matchId,
       winners: winners,
       total: total,
+      battleRoyale: battleRoyale,
     );
   }
 }
 
 extension RuleEntityExtension on RuleEntity? {
   Rule? toRuleModel() {
-    return this != null ? Rule(
-      id: this!.id!,
-      matchId: this!.matchId,
-      winners: this!.winners,
-      total: this!.total,
-    ):null;
+    return this != null
+        ? Rule(
+            id: this!.id!,
+            matchId: this!.matchId,
+            winners: this!.winners,
+            total: this!.total,
+            battleRoyale: this!.battleRoyale,
+          )
+        : null;
   }
 }

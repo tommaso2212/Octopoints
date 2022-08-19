@@ -98,7 +98,7 @@ class _$OctopointsDb extends OctopointsDb {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `teamUserRelation` (`teamId` INTEGER NOT NULL, `userId` INTEGER NOT NULL, FOREIGN KEY (`teamId`) REFERENCES `teams` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE, PRIMARY KEY (`teamId`, `userId`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `rules` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `matchId` INTEGER NOT NULL, `winners` INTEGER NOT NULL, `total` INTEGER NOT NULL, FOREIGN KEY (`matchId`) REFERENCES `matches` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `rules` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `matchId` INTEGER NOT NULL, `winners` INTEGER NOT NULL, `total` INTEGER NOT NULL, `battleRoyale` INTEGER NOT NULL, FOREIGN KEY (`matchId`) REFERENCES `matches` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_rules_matchId` ON `rules` (`matchId`)');
 
@@ -441,7 +441,8 @@ class _$RuleDao extends RuleDao {
                   'id': item.id,
                   'matchId': item.matchId,
                   'winners': item.winners,
-                  'total': item.total
+                  'total': item.total,
+                  'battleRoyale': item.battleRoyale ? 1 : 0
                 }),
         _ruleEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -451,7 +452,8 @@ class _$RuleDao extends RuleDao {
                   'id': item.id,
                   'matchId': item.matchId,
                   'winners': item.winners,
-                  'total': item.total
+                  'total': item.total,
+                  'battleRoyale': item.battleRoyale ? 1 : 0
                 }),
         _ruleEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -461,7 +463,8 @@ class _$RuleDao extends RuleDao {
                   'id': item.id,
                   'matchId': item.matchId,
                   'winners': item.winners,
-                  'total': item.total
+                  'total': item.total,
+                  'battleRoyale': item.battleRoyale ? 1 : 0
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -479,8 +482,12 @@ class _$RuleDao extends RuleDao {
   @override
   Future<RuleEntity?> getRule(int id) async {
     return _queryAdapter.query('SELECT * FROM rules WHERE matchId=?1',
-        mapper: (Map<String, Object?> row) => RuleEntity(row['id'] as int?,
-            row['matchId'] as int, row['winners'] as int, row['total'] as int),
+        mapper: (Map<String, Object?> row) => RuleEntity(
+            row['id'] as int?,
+            row['matchId'] as int,
+            row['winners'] as int,
+            row['total'] as int,
+            (row['battleRoyale'] as int) != 0),
         arguments: [id]);
   }
 

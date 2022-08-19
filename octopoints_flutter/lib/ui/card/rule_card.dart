@@ -4,6 +4,7 @@ import 'package:octopoints_flutter/ui/common_widget/confirm_button.dart';
 import 'package:octopoints_flutter/ui/common_widget/number_input_field.dart';
 import 'package:octopoints_flutter/ui/common_widget/rounded_card.dart';
 import 'package:octopoints_flutter/ui/providers/match_provider.dart';
+import 'package:octopoints_flutter/ui/theme/octopoints_theme.dart';
 import 'package:provider/provider.dart';
 
 class RuleCard extends StatefulWidget {
@@ -18,11 +19,13 @@ class RuleCard extends StatefulWidget {
 class _RuleCardState extends State<RuleCard> {
   String total = "";
   String winners = "";
+  bool battleRoyale = false;
 
   @override
   void initState() {
     total = widget.match.rule!.total.toString();
     winners = widget.match.rule!.winners.toString();
+    battleRoyale = widget.match.rule!.battleRoyale;
     super.initState();
   }
 
@@ -55,7 +58,7 @@ class _RuleCardState extends State<RuleCard> {
         children: [
           Padding(
             padding: const EdgeInsets.only(
-              bottom: 30,
+              bottom: 15,
             ),
             child: Text(
               widget.match.name,
@@ -64,9 +67,27 @@ class _RuleCardState extends State<RuleCard> {
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.only(
+              bottom: 20,
+            ),
+            child: SwitchListTile(
+              value: battleRoyale,
+              activeColor: OctopointsTheme.primaryColor,
+              title: const Text(
+                'Battle royale mode',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              onChanged: (value) => setState(() {
+                battleRoyale = value;
+              }),
+            ),
+          ),
           NumberInputField(
             initialValue: total.toString(),
-            label: 'Total points to win',
+            label: 'Total points to ' + (battleRoyale ? 'lose' : 'win'),
             validateInput: (value) => validateInput(value),
             onChanged: (value) => setState(() => total = value),
           ),
