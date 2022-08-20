@@ -13,10 +13,11 @@ class TeamProvider extends OctopointsProvider<Team> {
     return teams;
   }
 
-  void createTeam() async {
+  Future<Team> createTeam() async {
     Team team = await OctopointsService.teamService
         .createTeam(Team(matchId: _match.id));
     addItem(team);
+    return team;
   }
 
   void deleteTeam(Team team) async {
@@ -41,12 +42,9 @@ class TeamProvider extends OctopointsProvider<Team> {
   }
 
   void updateTeamStatusByRule(Team team) {
-    if (_match.rule != null) {
-      if (team.total >= _match.rule!.total) {}
-      if (_match.rule!.battleRoyale) {}
-    }
     if (_match.rule != null && team.total >= _match.rule!.total) {
-      team.status = TeamStatusEnum.win;
+      team.status =
+          _match.rule!.battleRoyale ? TeamStatusEnum.lose : TeamStatusEnum.win;
     } else {
       team.status = TeamStatusEnum.playing;
     }

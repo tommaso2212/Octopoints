@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:octopoints_flutter/service/service.dart';
 import 'package:octopoints_flutter/ui/common_widget/confirm_button.dart';
+import 'package:octopoints_flutter/ui/providers/match_provider.dart';
 import 'package:octopoints_flutter/ui/providers/team_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -46,7 +47,7 @@ class EndMatchModal extends StatelessWidget {
         ConfirmButton(
           onPressed: () {
             context.read<TeamProvider>().deleteMatch();
-            Navigator.popUntil(context, ModalRoute.withName('home'));
+            Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);
           },
         )
       ],

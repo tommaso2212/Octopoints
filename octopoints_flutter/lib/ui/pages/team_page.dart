@@ -3,6 +3,8 @@ import 'package:octopoints_flutter/service/service.dart';
 import 'package:octopoints_flutter/ui/card/team_card.dart';
 import 'package:octopoints_flutter/ui/common_widget/create_floating_action_button.dart';
 import 'package:octopoints_flutter/ui/common_widget/filterable_list.dart';
+import 'package:octopoints_flutter/ui/modal/base_modal.dart';
+import 'package:octopoints_flutter/ui/modal/teammates_modal.dart';
 import 'package:octopoints_flutter/ui/providers/team_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +18,9 @@ class TeamPage extends StatelessWidget {
 
   Widget buildListItem(BuildContext context, int index, String textFilter) {
     Team team = context.watch<TeamProvider>().data[index];
+    if(textFilter.isNotEmpty && !team.users.any((user) => user.username.contains(textFilter))){
+            return const SizedBox.shrink();
+    }
     return TeamCard(team: team);
   }
 
@@ -49,7 +54,18 @@ class TeamPage extends StatelessWidget {
       floatingActionButton: ChangeNotifierProvider.value(
         value: _teamProvider,
         builder: (context, _) => CreateFloatingActionButton(
-          onPressed: () => context.read<TeamProvider>().createTeam(),
+          onPressed: () async {
+            Team team = await context.read<TeamProvider>().createTeam();
+            BaseModal.showModal(
+                  context,
+                  ChangeNotifierProvider.value(
+                    value: context.read<TeamProvider>(),
+                    child: TeammatesModal(
+                      team: team,
+                    ),
+                  ),
+                );
+          },
         ),
       ),
     );

@@ -45,6 +45,7 @@ class _RuleCardState extends State<RuleCard> {
   void updateRule(BuildContext context) async {
     widget.match.rule!.total = int.parse(total);
     widget.match.rule!.winners = int.parse(winners);
+    widget.match.rule!.battleRoyale = battleRoyale;
     await context.read<MatchProvider>().updateRule(widget.match);
     Navigator.pop(context);
   }
