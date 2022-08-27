@@ -3,11 +3,11 @@ package dev.tpavani.octopoints.db.entity
 import androidx.room.Entity
 import androidx.room.ForeignKey
 
-@Entity(tableName = "jointeam",
+@Entity(tableName = "teamUserRelation",
     primaryKeys = ["teamId", "userId"],
     foreignKeys = [
         ForeignKey(
-            entity = TeamEntity::class,
+            entity = teamEntity::class,
             parentColumns = ["id"],
             childColumns = ["teamId"],
             onDelete = ForeignKey.CASCADE,
@@ -20,7 +20,7 @@ import androidx.room.ForeignKey
         )
     ]
 )
-class JoinTeamEntity(
+class TeamUserRelationEntity(
     val teamId: Int,
     val userId: Int,
 )

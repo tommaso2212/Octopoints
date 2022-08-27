@@ -7,9 +7,5 @@ import androidx.room.PrimaryKey
 class MatchEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
-    val description: String,
-    val gameMode: Int,
-    val points: Int,
-    val survivors: Int,
-    var active: Boolean,
+    val name: String,
 )

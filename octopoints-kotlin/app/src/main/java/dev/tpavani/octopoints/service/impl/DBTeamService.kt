@@ -4,20 +4,19 @@ import dev.tpavani.octopoints.db.DbSingleton
 import dev.tpavani.octopoints.db.dao.JoinTeamDao
 import dev.tpavani.octopoints.db.dao.TeamDao
 import dev.tpavani.octopoints.db.entity.JoinTeamEntity
-import dev.tpavani.octopoints.db.entity.TeamEntity
+import dev.tpavani.octopoints.db.entity.teamEntity
 import dev.tpavani.octopoints.service.DBService
 import dev.tpavani.octopoints.service.model.Team
 import dev.tpavani.octopoints.service.model.User
 import dev.tpavani.octopoints.service.utils.GetListFilter
-import java.util.function.Predicate
 
-class DBTeamService: DBService<Team, TeamEntity>() {
+class DBTeamService: DBService<Team, teamEntity>() {
 
     override val dao: TeamDao = DbSingleton.getDb().teamDao()
     private val joinTeamDao: JoinTeamDao = DbSingleton.getDb().joinTeamDao()
 
-    override fun entityMapper(model: Team): TeamEntity {
-        return TeamEntity(model.getId(), model.getMatchId(), model.getName(), model.total, model.partial)
+    override fun entityMapper(model: Team): teamEntity {
+        return teamEntity(model.getId(), model.getMatchId(), model.getName(), model.total, model.partial)
     }
 
     override suspend fun getList(filter: GetListFilter): MutableList<Team> {

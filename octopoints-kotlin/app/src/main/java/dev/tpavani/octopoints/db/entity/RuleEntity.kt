@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "teams", foreignKeys = [
+@Entity(tableName = "rules", foreignKeys = [
     ForeignKey(
         entity = MatchEntity::class,
         parentColumns = ["id"],
@@ -12,11 +12,11 @@ import androidx.room.PrimaryKey
         onDelete = ForeignKey.CASCADE
     )
 ])
-class TeamEntity(
+class RuleEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val matchId: Int,
+    var winners: Int,
     var total: Int,
-    var partial: Int,
-    var status: Int,
+    var battleRoyale: Boolean,
 )
