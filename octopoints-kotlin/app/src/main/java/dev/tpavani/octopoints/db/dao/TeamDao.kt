@@ -6,6 +6,6 @@ import dev.tpavani.octopoints.db.entity.TeamEntity
 
 @Dao
 interface TeamDao : IDao<TeamEntity>{
-    @Query("SELECT * FROM teams WHERE matchId=:id")
+    @Query("SELECT * FROM teams WHERE matchId=:id ORDER BY total DESC")
     suspend fun getTeamsByMatchId(id: Int): List<TeamEntity>
 }

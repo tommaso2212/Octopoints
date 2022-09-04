@@ -3,14 +3,9 @@ package dev.tpavani.octopoints
 import dev.tpavani.octopoints.db.DbSingleton
 import org.junit.Test
 import androidx.test.core.app.ApplicationProvider
-import dev.tpavani.octopoints.service.DBService
-import dev.tpavani.octopoints.service.impl.DBMatchService
-import dev.tpavani.octopoints.service.impl.DBTeamService
-import dev.tpavani.octopoints.service.impl.DBUserService
 import dev.tpavani.octopoints.service.model.Match
 import dev.tpavani.octopoints.service.model.Team
 import dev.tpavani.octopoints.service.model.User
-import dev.tpavani.octopoints.service.utils.GetListFilter
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals

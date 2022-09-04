@@ -14,7 +14,7 @@ class DbSingleton {
         }
 
         fun initDb(context: Context) {
-            db = Room.databaseBuilder(context, OctopointsDb::class.java, "octopoints-db").build()
+            db = Room.databaseBuilder(context, OctopointsDb::class.java, "octopoints.db").build()
         }
     }
 }

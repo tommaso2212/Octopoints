@@ -6,7 +6,7 @@ import androidx.room.Update
 
 interface IDao<T> {
     @Insert
-    suspend fun create(t: T) : Long
+    suspend fun create(t: T) : Int
 
     @Update
     suspend fun modify(list: List<T>) : Int
